@@ -135,6 +135,18 @@ textarea.det-input{resize:vertical;min-height:56px}
 
 /* EMPTY */
 .empty{text-align:center;padding:48px;color:var(--text3);font-size:14px;display:none}
+
+/* NEW CARD BTN */
+.btn-new-card{display:flex;align-items:center;gap:6px;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:8px;width:100%}
+.btn-new-card:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
+
+/* NEW FASE BTN */
+.btn-new-fase{display:flex;align-items:center;gap:6px;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:10px 16px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:4px;width:100%}
+.btn-new-fase:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
+
+/* DELETE CARD BTN */
+.btn-del-card{border:none;background:none;font-size:13px;color:var(--text3);cursor:pointer;padding:3px 6px;border-radius:4px;transition:all .15s;flex-shrink:0}
+.btn-del-card:hover{background:var(--red-bg);color:var(--red)}
 footer{text-align:center;padding:24px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:32px}
 
 @media(max-width:640px){
@@ -180,7 +192,9 @@ footer{text-align:center;padding:24px;font-size:11px;color:var(--text3);border-t
 
 <main>
   <div id="panel-casal" class="panel active"></div>
+  <button class="btn-new-fase" id="new-fase-casal" onclick="addFase('casal')">+ Nova fase — Jornada do Casal</button>
   <div id="panel-convidado" class="panel"></div>
+  <button class="btn-new-fase" id="new-fase-convidado" onclick="addFase('convidado')" style="display:none">+ Nova fase — Jornada do Convidado</button>
   <div class="empty" id="empty-state">Nenhuma etapa encontrada.</div>
 </main>
 
@@ -538,6 +552,7 @@ function renderAll(){
           <span class="fase-tog open" id="ftog-${fase.id}">▾</span>
         </div>
         <div class="fase-body" id="fbody-${fase.id}"></div>
+        <button class="btn-new-card" onclick="addCard('${fase.id}','${tab}')">+ Nova etapa</button>
       `;
       const body=faseEl.querySelector('.fase-body');
       fase.cards.forEach((card)=>{
@@ -576,6 +591,7 @@ function buildCard(idx,card,cs){
         <textarea class="card-title-ta" rows="2" placeholder="Nome da etapa..."
           oninput="updateF(${idx},'titulo',this.value);autoResize(this)"
           onfocus="autoResize(this)">${esc(cs.titulo)}</textarea>
+        <button class="btn-del-card" onclick="deleteCard(${idx})" title="Remover etapa">✕</button>
         <div class="card-dot"></div>
       </div>
       <div class="card-foot">
@@ -643,9 +659,11 @@ function switchTab(tab, btn){
   btn.classList.add('active');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
+  // toggle new fase buttons
+  document.getElementById('new-fase-casal').style.display = tab==='casal'?'flex':'none';
+  document.getElementById('new-fase-convidado').style.display = tab==='convidado'?'flex':'none';
   updateStats();
   updateAllFaseProgs();
-  // re-apply current filter
   const activeFilter = document.querySelector('.fbtn.active');
   if(activeFilter) filterCards(activeFilter.dataset.filter||'all', activeFilter);
 }
@@ -756,6 +774,74 @@ function updateAllFaseProgs(){
     const el=document.getElementById('fprog-'+fase.id);
     if(el) el.textContent=`${done}/${cards.length}`;
   });
+}
+
+// ─────────────────────────────────────────────
+// ADD / DELETE
+// ─────────────────────────────────────────────
+function addCard(faseId, tab){
+  const idx = cardIdx++;
+  cardMeta[idx] = {tab, faseId};
+  const cs = getCS(idx);
+  cs.titulo=''; cs.processo=''; cs.responsavel=''; cs.prazo='';
+  cs.problemas=['']; cs.solucoes=[''];
+  saveState();
+  const emptyCard = {titulo:'', tags:[], processo:'', problemas:[''], responsavel:'', prazo:'', solucoes:['']};
+  const cardEl = buildCard(idx, emptyCard, cs);
+  const body = document.getElementById('fbody-'+faseId);
+  body.appendChild(cardEl);
+  cardEl.querySelector('textarea').focus();
+  setTimeout(()=>{ cardEl.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
+  updateStats();
+  updateAllFaseProgs();
+}
+
+function addFase(tab){
+  const faseId = tab[0]+Date.now();
+  const newFase = {
+    id: faseId,
+    color:'#5C5A55', chipBg:'#F4F3F0', chipColor:'#2C2B28',
+    title:'Nova fase',
+    cards:[]
+  };
+  DATA[tab].push(newFase);
+  const panel = document.getElementById('panel-'+tab);
+  const btnFase = document.getElementById('new-fase-'+tab);
+  const faseEl = document.createElement('div');
+  faseEl.className='fase'; faseEl.id='fase-'+faseId;
+  faseEl.innerHTML=`
+    <div class="fase-hd" onclick="toggleFase('${faseId}')">
+      <input type="text" value="Nova fase" placeholder="Nome da fase..."
+        onclick="event.stopPropagation()"
+        oninput="renameFase('${faseId}',this.value)"
+        style="font-size:12px;font-weight:600;border:1px solid var(--border2);border-radius:6px;padding:3px 8px;font-family:'Inter',sans-serif;color:var(--text2);background:var(--surface);outline:none;width:180px">
+      <div class="fase-line"></div>
+      <span class="fase-prog" id="fprog-${faseId}">0/0</span>
+      <span class="fase-tog open" id="ftog-${faseId}">▾</span>
+    </div>
+    <div class="fase-body" id="fbody-${faseId}"></div>
+    <button class="btn-new-card" onclick="addCard('${faseId}','${tab}')">+ Nova etapa</button>
+  `;
+  panel.insertBefore(faseEl, null);
+  panel.appendChild(faseEl);
+  // put new fase button after
+  document.getElementById('new-fase-'+tab).after(faseEl);
+  faseEl.querySelector('input').focus();
+}
+
+function renameFase(faseId, value){
+  const chip = document.querySelector(`#fase-${faseId} .fase-chip`);
+  if(chip) chip.textContent = value;
+}
+
+function deleteCard(idx){
+  if(!confirm('Remover esta etapa?')) return;
+  const card = document.querySelector(`[data-idx="${idx}"]`);
+  if(card) card.remove();
+  delete state[idx];
+  saveState();
+  updateStats();
+  updateAllFaseProgs();
 }
 
 // INIT
