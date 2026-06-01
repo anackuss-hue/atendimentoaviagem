@@ -723,9 +723,9 @@ function buildUmProblema(idx,pi,p){
     +' value="'+comoVal+'">'
     +'</div>'
     +'<div class="det-sec">'
-    +'<div class="prob-sub-lbl">O que &#233; feito/enviado &#8212; '+msgs.length+' mensagem(ns)</div>'
+    +'<div class="prob-sub-lbl">O que &#233; feito/enviado &#8212; '+msgs.length+' ação(ões)</div>'
     +'<div class="msgs-wrap" id="msgs-'+idx+'-'+pi+'">'+msgsHtml+'</div>'
-    +'<button class="btn-add-msg" onclick="addMsgItem('+idx+','+pi+')">+ Adicionar mensagem</button>'
+    +'<button class="btn-add-msg" onclick="addMsgItem('+idx+','+pi+')">+ Adicionar ação</button>'
     +'</div>'
     +'</div>'
     +'</div>';
@@ -826,7 +826,7 @@ function updateProblemaField(idx,pi,field,value){
   // update count label
   if(field==='oQueEnviado'){
     const lbl=document.querySelector(`#prob-body-${idx}-${pi} .prob-sub-lbl:last-of-type`);
-    if(lbl) lbl.textContent=`O que é feito/enviado — ${(cs.problemas[pi].oQueEnviado||[]).length} mensagem(ns)`;
+    if(lbl) lbl.textContent=`O que é feito/enviado — ${(cs.problemas[pi].oQueEnviado||[]).length} ação(ões)`;
   }
 }
 
@@ -863,7 +863,7 @@ function addMsgItem(idx,pi){
   const div=document.createElement('div');
   div.id=`msg-${idx}-${pi}-${mi}`; div.className='msg-row';
   div.innerHTML=`<span class="msg-num">${mi+1}</span>
-    <textarea class="msg-ta" rows="1" placeholder="Cole ou escreva a mensagem ${mi+1}..."
+    <textarea class="msg-ta" rows="1" placeholder="Descreva a ação ${mi+1}..."
       oninput="updateMsgItem(${idx},${pi},${mi},this.value);autoResize(this)"
       onfocus="autoResize(this)"></textarea>
     <button class="btn-rm-sm" onclick="removeMsgItem(${idx},${pi},${mi})">×</button>`;
@@ -887,7 +887,7 @@ function removeMsgItem(idx,pi,mi){
   const msgsHtml=msgs.map((m,i)=>`
     <div class="msg-row" id="msg-${idx}-${pi}-${i}">
       <span class="msg-num">${i+1}</span>
-      <textarea class="msg-ta" rows="1" placeholder="Cole ou escreva a mensagem ${i+1}..."
+      <textarea class="msg-ta" rows="1" placeholder="Descreva a ação ${i+1}..."
         oninput="updateMsgItem(${idx},${pi},${i},this.value);autoResize(this)"
         onfocus="autoResize(this)">${esc(m)}</textarea>
       <button class="btn-rm-sm" onclick="removeMsgItem(${idx},${pi},${i})">×</button>
@@ -901,7 +901,7 @@ function updateMsgCountLabel(idx,pi){
   const cs=getCS(idx);
   const count=(cs.problemas[pi]?.oQueEnviado||[]).length;
   const lbls=document.querySelectorAll(`#prob-body-${idx}-${pi} .prob-sub-lbl`);
-  if(lbls[1]) lbls[1].textContent=`O que é feito/enviado — ${count} mensagem(ns)`;
+  if(lbls[1]) lbls[1].textContent=`O que é feito/enviado — ${count} ação(ões)`;
 }
 
 function refreshProbBadge(idx){
