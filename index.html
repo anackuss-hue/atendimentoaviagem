@@ -127,8 +127,8 @@ textarea.det-input{resize:vertical;min-height:56px}
 .prob-card-arrow.open{transform:rotate(90deg)}
 .prob-card-title{flex:1;font-size:12px;color:#7A1515;line-height:1.45;font-family:'Inter',sans-serif;border:none;background:transparent;outline:none;resize:none;min-height:18px;padding:0;cursor:text;font-weight:400}
 .prob-card-title:focus{background:rgba(192,57,43,.06);border-radius:3px;padding:1px 3px;margin:-1px -3px}
-.prob-card-body{display:none;padding:8px 10px 10px 10px;border-top:1px solid var(--red-border);background:#FDF4F4}
-.prob-card-body.open{display:block}
+.prob-card-body{display:block;padding:8px 10px 10px 10px;border-top:1px solid var(--red-border);background:#FDF4F4}
+.prob-card-body.collapsed{display:none}
 .prob-sub-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#A04040;margin-bottom:4px;font-weight:600}
 .prob-sub-input{width:100%;border:1px solid #F0C0C0;border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;background:#fff;color:#5A1515;outline:none;line-height:1.45}
 .prob-sub-input:focus{border-color:#D07070;box-shadow:0 0 0 2px rgba(192,57,43,.08)}
@@ -708,7 +708,7 @@ function buildUmProblema(idx,pi,p){
   var q = "'";
   return '<div class="prob-card" id="prob-card-'+idx+'-'+pi+'">'
     +'<div class="prob-card-head" onclick="toggleProbCard('+q+idx+'-'+pi+q+')">'
-    +'<span class="prob-card-arrow" id="prob-arrow-'+idx+'-'+pi+'">&#9654;</span>'
+    +'<span class="prob-card-arrow" id="prob-arrow-'+idx+'-'+pi+'" style="display:inline-block;transform:rotate(90deg);transition:transform .15s">&#9654;</span>'
     +'<textarea class="prob-card-title" rows="1"'
     +' oninput="updateProblemaField('+idx+','+pi+','+q+'texto'+q+',this.value);autoResize(this)"'
     +' onfocus="autoResize(this)"'
@@ -717,13 +717,13 @@ function buildUmProblema(idx,pi,p){
     +'</div>'
     +'<div class="prob-card-body" id="prob-body-'+idx+'-'+pi+'">'
     +'<div class="det-sec">'
-    +'<div class="prob-sub-lbl">Como &#233; enviado</div>'
+    +'<div class="prob-sub-lbl">Como &#233; feito</div>'
     +'<input class="prob-sub-input" type="text"'
     +' oninput="updateProblemaField('+idx+','+pi+','+q+'comoEnviado'+q+',this.value)"'
     +' value="'+comoVal+'">'
     +'</div>'
     +'<div class="det-sec">'
-    +'<div class="prob-sub-lbl">O que &#233; enviado &#8212; '+msgs.length+' mensagem(ns)</div>'
+    +'<div class="prob-sub-lbl">O que &#233; feito/enviado &#8212; '+msgs.length+' mensagem(ns)</div>'
     +'<div class="msgs-wrap" id="msgs-'+idx+'-'+pi+'">'+msgsHtml+'</div>'
     +'<button class="btn-add-msg" onclick="addMsgItem('+idx+','+pi+')">+ Adicionar mensagem</button>'
     +'</div>'
@@ -812,9 +812,9 @@ function removeItem(idx,field,i){
 function toggleProbCard(key){
   const body=document.getElementById('prob-body-'+key);
   const arrow=document.getElementById('prob-arrow-'+key);
-  const open=body.classList.toggle('open');
-  arrow.classList.toggle('open',open);
-  if(open) setTimeout(()=>{ body.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
+  const collapsed=body.classList.toggle('collapsed');
+  arrow.style.transform = collapsed ? '' : 'rotate(90deg)';
+  if(!collapsed) setTimeout(()=>{ body.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
 }
 
 function updateProblemaField(idx,pi,field,value){
@@ -826,7 +826,7 @@ function updateProblemaField(idx,pi,field,value){
   // update count label
   if(field==='oQueEnviado'){
     const lbl=document.querySelector(`#prob-body-${idx}-${pi} .prob-sub-lbl:last-of-type`);
-    if(lbl) lbl.textContent=`O que é enviado — ${(cs.problemas[pi].oQueEnviado||[]).length} mensagem(ns)`;
+    if(lbl) lbl.textContent=`O que é feito/enviado — ${(cs.problemas[pi].oQueEnviado||[]).length} mensagem(ns)`;
   }
 }
 
@@ -901,7 +901,7 @@ function updateMsgCountLabel(idx,pi){
   const cs=getCS(idx);
   const count=(cs.problemas[pi]?.oQueEnviado||[]).length;
   const lbls=document.querySelectorAll(`#prob-body-${idx}-${pi} .prob-sub-lbl`);
-  if(lbls[1]) lbls[1].textContent=`O que é enviado — ${count} mensagem(ns)`;
+  if(lbls[1]) lbls[1].textContent=`O que é feito/enviado — ${count} mensagem(ns)`;
 }
 
 function refreshProbBadge(idx){
