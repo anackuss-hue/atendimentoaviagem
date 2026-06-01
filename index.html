@@ -556,15 +556,20 @@ function saveState(){ try{ localStorage.setItem(SK,JSON.stringify(state)); }catc
 function getCS(idx){
   if(!state[idx]) state[idx]={status:'todo',titulo:'',processo:'',responsavel:'',prazo:'',problemas:[],solucoes:[]};
   // migrate old string problemas to objects
-  state[idx].problemas = (state[idx].problemas||[]).map(p=>
-    typeof p==='string' ? {texto:p, comoEnviado:'', oQueEnviado:['']} : p
-  );
+  state[idx].problemas = (state[idx].problemas||[]).map(function(p){
+    if(!p) return {texto:'',comoEnviado:'',oQueEnviado:['']};
+    if(typeof p==='string') return {texto:p, comoEnviado:'', oQueEnviado:['']};
+    if(!p.oQueEnviado) p.oQueEnviado = [''];
+    if(!p.texto) p.texto = '';
+    if(!p.comoEnviado) p.comoEnviado = '';
+    return p;
+  });
   if(!state[idx].problemas.length) state[idx].problemas = [{texto:'',comoEnviado:'',oQueEnviado:['']}];
   return state[idx];
 }
 function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:['']}; }
 function autoResize(ta){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
-function esc(s){ return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/["]/g,'&#34;'); }
 
 // ─────────────────────────────────────────────
 // RENDER
@@ -596,8 +601,7 @@ function renderAll(){
         if(!cs.processo) cs.processo=card.processo;
         if(!cs.responsavel) cs.responsavel=card.responsavel;
         if(!cs.prazo) cs.prazo=card.prazo;
-        if(!cs.problemas||!cs.problemas.length) cs.problemas=card.problemas.map(p=>typeof p==='string'?mkProblema(p):p);
-        if(!cs.problemas.length) cs.problemas=[mkProblema('')];
+        if(!cs.problemas||!cs.problemas.length){ cs.problemas=card.problemas.map(function(p){ return typeof p==='string'?mkProblema(p):(p||mkProblema('')); }); } if(!cs.problemas.length) cs.problemas=[mkProblema('')];
         if(!cs.solucoes||!cs.solucoes.length) cs.solucoes=card.solucoes.length?[...card.solucoes]:[''];
         body.appendChild(buildCard(idx,card,cs));
       });
@@ -616,7 +620,7 @@ function buildCard(idx,card,cs){
   wrap.dataset.idx=idx;
   wrap.dataset.tab=cardMeta[idx].tab;
   const tagsHtml=card.tags.map(t=>`<span class="tag" style="background:${t.s};color:${t.c}">${t.t}</span>`).join('');
-  const probCount=cs.problemas.filter(p=>p.trim()).length;
+  const probCount=cs.problemas.filter(p=>((typeof p==='object'?p.texto:p)||'').trim()).length;
   const probBadge=probCount?`<span class="tag" style="background:#FDF3F2;color:#C0392B" data-prob="1">⚠ ${probCount} problema${probCount>1?'s':''}</span>`:'';
   wrap.innerHTML=`
     <div class="card-stripe"></div>
@@ -689,43 +693,45 @@ function buildProblemasHtml(idx, problemas){
 }
 
 function buildUmProblema(idx,pi,p){
-  const msgsHtml = (p.oQueEnviado||['']).map((m,mi)=>`
-    <div class="msg-row" id="msg-${idx}-${pi}-${mi}">
-      <span class="msg-num">${mi+1}</span>
-      <textarea class="msg-ta" rows="1" placeholder="Cole ou escreva a mensagem ${mi+1}..."
-        oninput="updateMsgItem(${idx},${pi},${mi},this.value);autoResize(this)"
-        onfocus="autoResize(this)">${esc(m)}</textarea>
-      <button class="btn-rm-sm" onclick="removeMsgItem(${idx},${pi},${mi})">×</button>
-    </div>`).join('');
-  return `
-    <div class="prob-card" id="prob-card-${idx}-${pi}">
-      <div class="prob-card-head" onclick="toggleProbCard('${idx}-${pi}')">
-        <span class="prob-card-arrow" id="prob-arrow-${idx}-${pi}">▶</span>
-        <textarea class="prob-card-title" rows="1" placeholder="⚠ Descreva o problema..."
-          oninput="updateProblemaField(${idx},${pi},'texto',this.value);autoResize(this)"
-          onfocus="autoResize(this)"
-          onclick="event.stopPropagation()">${esc(p.texto||'')}</textarea>
-        <button class="btn-rm-sm" onclick="event.stopPropagation();removeProblema(${idx},${pi})" title="Remover">×</button>
-      </div>
-      <div class="prob-card-body" id="prob-body-${idx}-${pi}">
-        <div class="det-sec">
-          <div class="prob-sub-lbl">Como é enviado</div>
-          <input class="prob-sub-input" type="text" placeholder="Ex: WhatsApp automático, e-mail manual, Active Campaign..."
-            value="${esc(p.comoEnviado||'')}"
-            oninput="updateProblemaField(${idx},${pi},'comoEnviado',this.value)">
-        </div>
-        <div class="det-sec">
-          <div class="prob-sub-lbl">O que é enviado — ${(p.oQueEnviado||['']).length} mensagem(ns)</div>
-          <div class="msgs-wrap" id="msgs-${idx}-${pi}">${msgsHtml}</div>
-          <button class="btn-add-msg" onclick="addMsgItem(${idx},${pi})">+ Adicionar mensagem</button>
-        </div>
-      </div>
-    </div>`;
+  var msgs = (p.oQueEnviado||['']);
+  var msgsHtml = msgs.map(function(m,mi){
+    return '<div class="msg-row" id="msg-'+idx+'-'+pi+'-'+mi+'">'
+      +'<span class="msg-num">'+(mi+1)+'</span>'
+      +'<textarea class="msg-ta" rows="1"'
+      +' oninput="updateMsgItem('+idx+','+pi+','+mi+',this.value);autoResize(this)"'
+      +' onfocus="autoResize(this)">'+esc(m)+'</textarea>'
+      +'<button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+mi+')">&#215;</button>'
+      +'</div>';
+  }).join('');
+  var comoVal = esc(p.comoEnviado||'');
+  var textoVal = esc(p.texto||'');
+  var q = "'";
+  return '<div class="prob-card" id="prob-card-'+idx+'-'+pi+'">'
+    +'<div class="prob-card-head" onclick="toggleProbCard('+q+idx+'-'+pi+q+')">'
+    +'<span class="prob-card-arrow" id="prob-arrow-'+idx+'-'+pi+'">&#9654;</span>'
+    +'<textarea class="prob-card-title" rows="1"'
+    +' oninput="updateProblemaField('+idx+','+pi+','+q+'texto'+q+',this.value);autoResize(this)"'
+    +' onfocus="autoResize(this)"'
+    +' onclick="event.stopPropagation()">'+textoVal+'</textarea>'
+    +'<button class="btn-rm-sm" onclick="event.stopPropagation();removeProblema('+idx+','+pi+')">&#215;</button>'
+    +'</div>'
+    +'<div class="prob-card-body" id="prob-body-'+idx+'-'+pi+'">'
+    +'<div class="det-sec">'
+    +'<div class="prob-sub-lbl">Como &#233; enviado</div>'
+    +'<input class="prob-sub-input" type="text"'
+    +' oninput="updateProblemaField('+idx+','+pi+','+q+'comoEnviado'+q+',this.value)"'
+    +' value="'+comoVal+'">'
+    +'</div>'
+    +'<div class="det-sec">'
+    +'<div class="prob-sub-lbl">O que &#233; enviado &#8212; '+msgs.length+' mensagem(ns)</div>'
+    +'<div class="msgs-wrap" id="msgs-'+idx+'-'+pi+'">'+msgsHtml+'</div>'
+    +'<button class="btn-add-msg" onclick="addMsgItem('+idx+','+pi+')">+ Adicionar mensagem</button>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
 }
 
-// ─────────────────────────────────────────────
-// INTERACTIONS
-// ─────────────────────────────────────────────
+
 function switchTab(tab, btn){
   currentTab=tab;
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -904,7 +910,7 @@ function refreshProbBadge(idx){
   if(!card) return;
   const tagsWrap=card.querySelector('.tags');
   const ex=tagsWrap.querySelector('[data-prob]'); if(ex) ex.remove();
-  const count=cs.problemas.filter(p=>(p.texto||p||'').trim()).length;
+  const count=cs.problemas.filter(p=>((typeof p==='object'?p.texto:p)||'').trim()).length;
   if(count>0){
     const span=document.createElement('span');
     span.className='tag'; span.dataset.prob='1';
