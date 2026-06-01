@@ -163,6 +163,26 @@ textarea.det-input{resize:vertical;min-height:56px}
 /* EMPTY */
 .empty{text-align:center;padding:48px;color:var(--text3);font-size:14px;display:none}
 
+/* MSGS TIMELINE */
+.msgs-section{padding:10px 14px 14px 16px;background:#EFF5FD;border-top:1px solid var(--blue-border)}
+.msgs-section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);font-weight:600;margin-bottom:10px}
+.msgs-timeline{display:flex;flex-direction:column;gap:0}
+.msg-item{display:flex;gap:10px;position:relative}
+.msg-item:not(:last-child)::before{content:'';position:absolute;left:13px;top:28px;bottom:-4px;width:1px;background:#BFD9F0}
+.msg-circle{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:5px}
+.msg-bubble{background:#fff;border:1px solid var(--blue-border);border-radius:8px;padding:8px 10px;margin-bottom:8px;flex:1;min-width:0}
+.msg-bubble-head{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.msg-bubble-label{font-size:10px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;flex:1;border:none;background:transparent;font-family:'Inter',sans-serif;outline:none;cursor:text}
+.msg-bubble-label:focus{background:rgba(37,99,168,.06);border-radius:3px;padding:1px 3px}
+.msg-bubble-label::placeholder{color:#90B0D8;opacity:.7}
+.msg-bubble-ta{width:100%;border:none;background:transparent;font-size:12px;font-family:'Inter',sans-serif;color:var(--text);line-height:1.55;resize:none;outline:none;min-height:36px;padding:0;cursor:text}
+.msg-bubble-ta:focus{background:rgba(37,99,168,.04);border-radius:4px;padding:2px 4px;margin:-2px -4px;width:calc(100% + 8px)}
+.msg-bubble-ta::placeholder{color:#AAC4E0;opacity:.8}
+.msg-rm-btn{border:1px solid var(--blue-border);background:none;border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:12px;color:#90B0D8;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.msg-rm-btn:hover{background:#FDF3F2;border-color:var(--red-border);color:var(--red)}
+.btn-add-msg{border:1px dashed var(--blue-border);background:none;border-radius:var(--radius-sm);padding:5px 10px;font-size:11px;font-family:'Inter',sans-serif;color:var(--blue);cursor:pointer;transition:all .15s;margin-top:4px;width:100%;text-align:left}
+.btn-add-msg:hover{background:rgba(37,99,168,.06)}
+
 /* NEW CARD BTN */
 .btn-new-card{display:flex;align-items:center;gap:6px;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:8px;width:100%}
 .btn-new-card:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
@@ -554,7 +574,8 @@ const DATA = {
 function loadState(){ try{ const s=localStorage.getItem(SK); if(s) state=JSON.parse(s); }catch(e){ state={}; } }
 function saveState(){ try{ localStorage.setItem(SK,JSON.stringify(state)); }catch(e){} }
 function getCS(idx){
-  if(!state[idx]) state[idx]={status:'todo',titulo:'',processo:'',responsavel:'',prazo:'',problemas:[],solucoes:[]};
+  if(!state[idx]) state[idx]={status:'todo',titulo:'',processo:'',responsavel:'',prazo:'',problemas:[],solucoes:[],acoes:[]};
+  if(!state[idx].acoes) state[idx].acoes=[];
   // migrate old string problemas to objects
   state[idx].problemas = (state[idx].problemas||[]).map(function(p){
     if(!p) return {texto:'',comoEnviado:'',oQueEnviado:['']};
@@ -582,16 +603,15 @@ function renderAll(){
     DATA[tab].forEach(fase=>{
       const faseEl=document.createElement('div');
       faseEl.className='fase'; faseEl.id='fase-'+fase.id;
-      faseEl.innerHTML=`
-        <div class="fase-hd" onclick="toggleFase('${fase.id}')">
-          <span class="fase-chip" style="background:${fase.chipBg};color:${fase.chipColor}">${fase.title}</span>
-          <div class="fase-line"></div>
-          <span class="fase-prog" id="fprog-${fase.id}">0/${fase.cards.length}</span>
-          <span class="fase-tog open" id="ftog-${fase.id}">▾</span>
-        </div>
-        <div class="fase-body" id="fbody-${fase.id}"></div>
-        <button class="btn-new-card" onclick="addCard('${fase.id}','${tab}')">+ Nova etapa</button>
-      `;
+      faseEl.innerHTML=
+        '<div class="fase-hd" onclick="toggleFase(\'' + fase.id + '\')">'
+        + '<span class="fase-chip" style="background:' + fase.chipBg + ';color:' + fase.chipColor + '">' + fase.title + '</span>'
+        + '<div class="fase-line"></div>'
+        + '<span class="fase-prog" id="fprog-' + fase.id + '">0/' + fase.cards.length + '</span>'
+        + '<span class="fase-tog open" id="ftog-' + fase.id + '">&#9662;</span>'
+        + '</div>'
+        + '<div class="fase-body" id="fbody-' + fase.id + '"></div>'
+        + '<button class="btn-new-card" onclick="addCard(\'' + fase.id + '\',\'' + tab + '\')">+ Nova etapa</button>';
       const body=faseEl.querySelector('.fase-body');
       fase.cards.forEach((card)=>{
         const idx=cardIdx++;
@@ -615,77 +635,26 @@ function renderAll(){
 
 function buildCard(idx,card,cs){
   const wrap=document.createElement('div');
-  wrap.className=`card ${cs.status}`;
+  wrap.className='card '+cs.status;
   wrap.dataset.status=cs.status;
   wrap.dataset.idx=idx;
   wrap.dataset.tab=cardMeta[idx].tab;
-  const tagsHtml=card.tags.map(t=>`<span class="tag" style="background:${t.s};color:${t.c}">${t.t}</span>`).join('');
+  const tagsHtml=card.tags.map(function(t){ return '<span class="tag" style="background:'+t.s+';color:'+t.c+'">'+t.t+'</span>'; }).join('');
   const probCount=cs.problemas.filter(p=>((typeof p==='object'?p.texto:p)||'').trim()).length;
-  const probBadge=probCount?`<span class="tag" style="background:#FDF3F2;color:#C0392B" data-prob="1">⚠ ${probCount} problema${probCount>1?'s':''}</span>`:'';
-  wrap.innerHTML=`
-    <div class="card-stripe"></div>
-    <div class="card-head">
-      <div class="card-top">
-        <textarea class="card-title-ta" rows="2" placeholder="Nome da etapa..."
-          oninput="updateF(${idx},'titulo',this.value);autoResize(this)"
-          onfocus="autoResize(this)">${esc(cs.titulo)}</textarea>
-        <button class="btn-del-card" onclick="deleteCard(${idx})" title="Remover etapa">✕</button>
-        <div class="card-dot"></div>
-      </div>
-      <div class="card-foot">
-        <div class="tags">${tagsHtml}${probBadge}</div>
-        <select class="status-sel" onchange="changeStatus(${idx},this.value)">
-          <option value="todo"${cs.status==='todo'?' selected':''}>A resolver</option>
-          <option value="doing"${cs.status==='doing'?' selected':''}>Em andamento</option>
-          <option value="done"${cs.status==='done'?' selected':''}>Resolvido</option>
-        </select>
-      </div>
-    </div>
-    <button class="card-expbtn" id="expbtn-${idx}" onclick="toggleDet(${idx})">
-      <span class="arr">▾</span> Processo · Problemas · Soluções · Responsável
-    </button>
-    <div class="card-det" id="det-${idx}">
-      <div class="det-sec">
-        <div class="det-lbl">Como funciona hoje</div>
-        <textarea class="det-input" placeholder="Descreva o processo atual..."
-          oninput="updateF(${idx},'processo',this.value);autoResize(this)"
-          onfocus="autoResize(this)">${esc(cs.processo)}</textarea>
-      </div>
-      <div class="det-sec">
-        <div class="det-lbl">Problemas identificados</div>
-        <div id="prob-${idx}">${buildProblemasHtml(idx,cs.problemas)}</div>
-        <button class="btn-add" onclick="addProblema(${idx})">+ Adicionar problema</button>
-      </div>
-      <div class="det-sec">
-        <div class="det-lbl">Possíveis soluções</div>
-        <div class="list-wrap" id="sol-${idx}">${buildListHtml(idx,'solucoes',cs.solucoes,'sol-ta','💡 Descreva uma solução...')}</div>
-        <button class="btn-add" onclick="addItem(${idx},'solucoes')">+ Adicionar solução</button>
-      </div>
-      <div class="det-sec det-grid">
-        <div>
-          <div class="det-lbl">Responsável</div>
-          <input class="det-input" type="text" placeholder="Ex: Juliana, Ana..." value="${esc(cs.responsavel)}"
-            oninput="updateF(${idx},'responsavel',this.value)">
-        </div>
-        <div>
-          <div class="det-lbl">Prazo</div>
-          <input class="det-input" type="date" value="${esc(cs.prazo)}"
-            onchange="updateF(${idx},'prazo',this.value)">
-        </div>
-      </div>
-    </div>
-  `;
+  const probBadge=probCount?'<span class="tag" style="background:#FDF3F2;color:#C0392B" data-prob="1">⚠ '+probCount+' problema'+(probCount>1?'s':'')+'</span>':'';
+  wrap.innerHTML='<div class="card-stripe"></div><div class="card-head"><div class="card-top"><textarea class="card-title-ta" rows="2" oninput="updateF('+idx+',\'titulo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.titulo)+'</textarea><button class="btn-del-card" onclick="deleteCard('+idx+')" title="Remover">&#10005;</button><div class="card-dot"></div></div><div class="card-foot"><div class="tags">'+tagsHtml+probBadge+'</div><select class="status-sel" onchange="changeStatus('+idx+',this.value)"><option value="todo"'+(cs.status==='todo'?' selected':'')+'>A resolver</option><option value="doing"'+(cs.status==='doing'?' selected':'')+'>Em andamento</option><option value="done"'+(cs.status==='done'?' selected':'')+'>Resolvido</option></select></div></div><button class="card-expbtn" id="expbtn-'+idx+'" onclick="toggleDet('+idx+')"><span class="arr">&#9662;</span> Processo &middot; Problemas &middot; Solu&ccedil;&otilde;es &middot; Respons&aacute;vel</button><div class="card-det" id="det-'+idx+'"><div class="det-sec"><div class="det-lbl">Como funciona hoje</div><textarea class="det-input" oninput="updateF('+idx+',\'processo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.processo)+'</textarea></div><div class="det-sec"><div class="det-lbl">Problemas identificados</div><div id="prob-'+idx+'">'+buildProblemasHtml(idx,cs.problemas)+'</div><button class="btn-add" onclick="addProblema('+idx+')">+ Adicionar problema</button></div><div class="det-sec"><div class="det-lbl">Poss&iacute;veis solu&ccedil;&otilde;es</div><div class="list-wrap" id="sol-'+idx+'">'+buildListHtml(idx,'solucoes',cs.solucoes,'sol-ta','&#128161; Descreva uma solução...')+'</div><button class="btn-add" onclick="addItem('+idx+',\'solucoes\')">+ Adicionar solução</button></div><div class="det-sec det-grid"><div><div class="det-lbl">Responsável</div><input class="det-input" type="text" value="'+esc(cs.responsavel)+'" oninput="updateF('+idx+',\'responsavel\',this.value)"></div><div><div class="det-lbl">Prazo</div><input class="det-input" type="date" value="'+esc(cs.prazo)+'" onchange="updateF('+idx+',\'prazo\',this.value)"></div></div></div><div class="msgs-section" id="msgs-section-'+idx+'"><div class="msgs-section-lbl">Mensagens / Ações disparadas</div><div class="msgs-timeline" id="msgs-tl-'+idx+'">'+buildAcoesHtml(idx,cs.acoes)+'</div><button class="btn-add-msg" onclick="addAcao('+idx+')">+ Adicionar mensagem ou ação</button></div>';
   return wrap;
 }
 
 function buildListHtml(idx,field,items,cls,ph){
-  return items.map((s,i)=>`
-    <div class="list-row" id="${field}-row-${idx}-${i}">
-      <textarea class="list-ta ${cls}" rows="1" placeholder="${ph}"
-        oninput="updateItem(idx2,'${field}',${i},this.value);autoResize(this)"
-        onfocus="autoResize(this)">${esc(s)}</textarea>
-      <button class="btn-rm" onclick="removeItem(${idx},'${field}',${i})">×</button>
-    </div>`).join('').replace(/idx2/g,idx);
+  return items.map(function(s,i){
+    return '<div class="list-row" id="'+field+'-row-'+idx+'-'+i+'">'
+      +'<textarea class="list-ta '+cls+'" rows="1" placeholder="'+ph+'"'
+      +' oninput="updateItem('+idx+',\''+field+'\','+i+',this.value);autoResize(this)"'
+      +' onfocus="autoResize(this)">'+esc(s)+'</textarea>'
+      +'<button class="btn-rm" onclick="removeItem('+idx+',\''+field+'\','+i+')">&#215;</button>'
+      +'</div>';
+  }).join('');
 }
 
 function buildProblemasHtml(idx, problemas){
@@ -731,6 +700,60 @@ function buildUmProblema(idx,pi,p){
     +'</div>';
 }
 
+// ─────────────────────────────────────────────
+// ACOES (timeline messages)
+// ─────────────────────────────────────────────
+function buildAcoesHtml(idx, acoes){
+  if(!acoes || !acoes.length) return '';
+  return acoes.map(function(a,ai){ return buildUmaAcao(idx,ai,a); }).join('');
+}
+
+function buildUmaAcao(idx,ai,a){
+  var q = "'";
+  return '<div class="msg-item" id="acao-row-'+idx+'-'+ai+'">'
+    +'<div class="msg-circle">'+(ai+1)+'</div>'
+    +'<div class="msg-bubble">'
+    +'<div class="msg-bubble-head">'
+    +'<input class="msg-bubble-label" type="text" placeholder="Ex: Mensagem 1 · Boas-vindas..."'
+    +' value="'+esc(a.label||'')+'"'
+    +' oninput="updateAcaoField('+idx+','+ai+','+q+'label'+q+',this.value)">'
+    +'<button class="msg-rm-btn" onclick="removeAcao('+idx+','+ai+')" title="Remover">&#215;</button>'
+    +'</div>'
+    +'<textarea class="msg-bubble-ta" rows="2" placeholder="Cole o conteúdo ou descreva a ação..."'
+    +' oninput="updateAcaoField('+idx+','+ai+','+q+'texto'+q+',this.value);autoResize(this)"'
+    +' onfocus="autoResize(this)">'+esc(a.texto||'')+'</textarea>'
+    +'</div>'
+    +'</div>';
+}
+
+function addAcao(idx){
+  const cs = getCS(idx);
+  if(!cs.acoes) cs.acoes = [];
+  cs.acoes.push({label:'', texto:''});
+  saveState();
+  const ai = cs.acoes.length - 1;
+  const tl = document.getElementById('msgs-tl-'+idx);
+  tl.insertAdjacentHTML('beforeend', buildUmaAcao(idx, ai, cs.acoes[ai]));
+  const newRow = tl.lastElementChild;
+  newRow.querySelectorAll('textarea,input').forEach(function(el){ autoResize(el); });
+  newRow.querySelector('input').focus();
+}
+
+function updateAcaoField(idx, ai, field, value){
+  const cs = getCS(idx);
+  if(cs.acoes && cs.acoes[ai]) cs.acoes[ai][field] = value;
+  saveState();
+}
+
+function removeAcao(idx, ai){
+  const cs = getCS(idx);
+  if(!cs.acoes || !cs.acoes.length) return;
+  cs.acoes.splice(ai, 1);
+  saveState();
+  const tl = document.getElementById('msgs-tl-'+idx);
+  tl.innerHTML = buildAcoesHtml(idx, cs.acoes);
+  tl.querySelectorAll('textarea,input').forEach(function(el){ autoResize(el); });
+}
 
 function switchTab(tab, btn){
   currentTab=tab;
@@ -766,8 +789,8 @@ function changeStatus(idx,value){
   const cs=getCS(idx);
   cs.status=value;
   saveState();
-  const card=document.querySelector(`[data-idx="${idx}"]`);
-  card.className=`card ${value}`;
+  const card=document.querySelector('[data-idx="'+idx+'"');
+  card.className='card '+value;
   card.dataset.status=value;
   updateStats();
   updateAllFaseProgs();
@@ -787,18 +810,18 @@ function addItem(idx,field){
   const cls=field==='problemas'?'prob-ta':'sol-ta';
   const ph=field==='problemas'?'⚠ Descreva o problema...':'💡 Descreva uma solução...';
   const div=document.createElement('div');
-  div.id=`${field}-row-${idx}-${i}`; div.className='list-row';
-  div.innerHTML=`<textarea class="list-ta ${cls}" rows="1" placeholder="${ph}"
-    oninput="updateItem(${idx},'${field}',${i},this.value);autoResize(this)"
-    onfocus="autoResize(this)"></textarea>
-    <button class="btn-rm" onclick="removeItem(${idx},'${field}',${i})">×</button>`;
+  div.id=field+'-row-'+idx+'-'+i; div.className='list-row';
+  div.innerHTML='<textarea class="list-ta '+cls+'" rows="1" placeholder="'+ph+'"'
+    +' oninput="updateItem('+idx+',\''+field+'\','+i+',this.value);autoResize(this)"'
+    +' onfocus="autoResize(this)"></textarea>'
+    +'<button class="btn-rm" onclick="removeItem('+idx+',\''+field+'\','+i+')">&#215;</button>';
   wrap.appendChild(div);
   div.querySelector('textarea').focus();
 }
 
 function removeItem(idx,field,i){
   const cs=getCS(idx);
-  if(cs[field].length<=1){ cs[field][0]=''; saveState(); const ta=document.querySelector(`#${field}-row-${idx}-${i} textarea`); if(ta) ta.value=''; return; }
+  if(cs[field].length<=1){ cs[field][0]=''; saveState(); const ta=document.querySelector('#'+field+'\-row\-'+idx+'\-'+i+'\-textarea'); if(ta) ta.value=''; return; }
   cs[field].splice(i,1); saveState();
   const wrap=document.getElementById((field==='problemas'?'prob':'sol')+'-'+idx);
   const cls=field==='problemas'?'prob-ta':'sol-ta';
@@ -825,8 +848,8 @@ function updateProblemaField(idx,pi,field,value){
   if(field==='texto') refreshProbBadge(idx);
   // update count label
   if(field==='oQueEnviado'){
-    const lbl=document.querySelector(`#prob-body-${idx}-${pi} .prob-sub-lbl:last-of-type`);
-    if(lbl) lbl.textContent=`O que é feito/enviado — ${(cs.problemas[pi].oQueEnviado||[]).length} ação(ões)`;
+    const lbl=document.querySelector('#prob-body-'+(idx)+'-'+(pi)+' .prob-sub-lbl:last-of-type');
+    if(lbl) lbl.textContent='O que é feito/enviado — '+((cs.problemas[pi].oQueEnviado||[]).length)+' ação(ões)';
   }
 }
 
@@ -861,12 +884,8 @@ function addMsgItem(idx,pi){
   const mi=cs.problemas[pi].oQueEnviado.length-1;
   const wrap=document.getElementById('msgs-'+idx+'-'+pi);
   const div=document.createElement('div');
-  div.id=`msg-${idx}-${pi}-${mi}`; div.className='msg-row';
-  div.innerHTML=`<span class="msg-num">${mi+1}</span>
-    <textarea class="msg-ta" rows="1" placeholder="Descreva a ação ${mi+1}..."
-      oninput="updateMsgItem(${idx},${pi},${mi},this.value);autoResize(this)"
-      onfocus="autoResize(this)"></textarea>
-    <button class="btn-rm-sm" onclick="removeMsgItem(${idx},${pi},${mi})">×</button>`;
+  div.id='msg-'+(idx)+'-'+(pi)+'-'+(mi); div.className='msg-row';
+  div.innerHTML='<span class="msg-num">'+(mi+1)+'</span><textarea class="msg-ta" rows="1" oninput="updateMsgItem('+idx+','+pi+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)"></textarea><button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+mi+')">&#215;</button>';
   wrap.appendChild(div);
   div.querySelector('textarea').focus();
   updateMsgCountLabel(idx,pi);
@@ -881,17 +900,10 @@ function updateMsgItem(idx,pi,mi,value){
 function removeMsgItem(idx,pi,mi){
   const cs=getCS(idx);
   const msgs=cs.problemas[pi].oQueEnviado;
-  if(msgs.length<=1){ msgs[0]=''; saveState(); const ta=document.querySelector(`#msg-${idx}-${pi}-${mi} textarea`); if(ta) ta.value=''; return; }
+  if(msgs.length<=1){ msgs[0]=''; saveState(); const ta=document.querySelector('#msg-'+(idx)+'-'+(pi)+'-'+(mi)+' textarea'); if(ta) ta.value=''; return; }
   msgs.splice(mi,1); saveState();
   const wrap=document.getElementById('msgs-'+idx+'-'+pi);
-  const msgsHtml=msgs.map((m,i)=>`
-    <div class="msg-row" id="msg-${idx}-${pi}-${i}">
-      <span class="msg-num">${i+1}</span>
-      <textarea class="msg-ta" rows="1" placeholder="Descreva a ação ${i+1}..."
-        oninput="updateMsgItem(${idx},${pi},${i},this.value);autoResize(this)"
-        onfocus="autoResize(this)">${esc(m)}</textarea>
-      <button class="btn-rm-sm" onclick="removeMsgItem(${idx},${pi},${i})">×</button>
-    </div>`).join('');
+  const msgsHtml=msgs.map(function(m,i){ return '<div class="msg-row" id="msg-'+idx+'-'+pi+'-'+i+'"><span class="msg-num">'+(i+1)+'</span><textarea class="msg-ta" rows="1" oninput="updateMsgItem('+idx+','+pi+','+i+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea><button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+i+')">&#215;</button></div>'; }).join('');
   wrap.innerHTML=msgsHtml;
   wrap.querySelectorAll('textarea').forEach(ta=>autoResize(ta));
   updateMsgCountLabel(idx,pi);
@@ -900,13 +912,13 @@ function removeMsgItem(idx,pi,mi){
 function updateMsgCountLabel(idx,pi){
   const cs=getCS(idx);
   const count=(cs.problemas[pi]?.oQueEnviado||[]).length;
-  const lbls=document.querySelectorAll(`#prob-body-${idx}-${pi} .prob-sub-lbl`);
-  if(lbls[1]) lbls[1].textContent=`O que é feito/enviado — ${count} ação(ões)`;
+  const lbls=document.querySelectorAll('#prob-body-'+(idx)+'-'+(pi)+' .prob-sub-lbl');
+  if(lbls[1]) lbls[1].textContent='O que é feito/enviado — '+(count)+' ação(ões)';
 }
 
 function refreshProbBadge(idx){
   const cs=getCS(idx);
-  const card=document.querySelector(`[data-idx="${idx}"]`);
+  const card=document.querySelector('[data-idx="'+idx+'"');
   if(!card) return;
   const tagsWrap=card.querySelector('.tags');
   const ex=tagsWrap.querySelector('[data-prob]'); if(ex) ex.remove();
@@ -915,7 +927,7 @@ function refreshProbBadge(idx){
     const span=document.createElement('span');
     span.className='tag'; span.dataset.prob='1';
     span.style.background='#FDF3F2'; span.style.color='#C0392B';
-    span.textContent=`⚠ ${count} problema${count>1?'s':''}`;
+    span.textContent='⚠ '+(count)+' problema'+(count>1?'s':'');
     tagsWrap.appendChild(span);
   }
 }
@@ -924,14 +936,14 @@ function filterCards(status, btn){
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   btn.dataset.filter=status;
-  const cards=document.querySelectorAll(`#panel-${currentTab} .card`);
+  const cards=document.querySelectorAll('#panel-'+(currentTab)+' .card');
   let visible=0;
   cards.forEach(c=>{ const show=status==='all'||c.dataset.status===status; c.style.display=show?'':'none'; if(show) visible++; });
   document.getElementById('empty-state').style.display=visible===0?'block':'none';
 }
 
 function updateStats(){
-  const cards=document.querySelectorAll(`#panel-${currentTab} .card`);
+  const cards=document.querySelectorAll('#panel-'+(currentTab)+' .card');
   let todo=0,doing=0,done=0;
   cards.forEach(c=>{ if(c.dataset.status==='todo') todo++; else if(c.dataset.status==='doing') doing++; else if(c.dataset.status==='done') done++; });
   const total=cards.length;
@@ -940,15 +952,15 @@ function updateStats(){
   document.getElementById('stat-done').textContent=done;
   const pct=total?Math.round((done/total)*100):0;
   document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('prog-txt').textContent=`${done} de ${total} etapas resolvidas · ${pct}%`;
+  document.getElementById('prog-txt').textContent=(done)+' de '+(total)+' etapas resolvidas · '+(pct)+'%';
 }
 
 function updateAllFaseProgs(){
   Object.values(DATA).flat().forEach(fase=>{
-    const cards=document.querySelectorAll(`#fbody-${fase.id} .card`);
+    const cards=document.querySelectorAll('#fbody-'+(fase.id)+' .card');
     const done=[...cards].filter(c=>c.dataset.status==='done').length;
     const el=document.getElementById('fprog-'+fase.id);
-    if(el) el.textContent=`${done}/${cards.length}`;
+    if(el) el.textContent=(done)+'/'+(cards.length);
   });
 }
 
@@ -985,19 +997,7 @@ function addFase(tab){
   const btnFase = document.getElementById('new-fase-'+tab);
   const faseEl = document.createElement('div');
   faseEl.className='fase'; faseEl.id='fase-'+faseId;
-  faseEl.innerHTML=`
-    <div class="fase-hd" onclick="toggleFase('${faseId}')">
-      <input type="text" value="Nova fase" placeholder="Nome da fase..."
-        onclick="event.stopPropagation()"
-        oninput="renameFase('${faseId}',this.value)"
-        style="font-size:12px;font-weight:600;border:1px solid var(--border2);border-radius:6px;padding:3px 8px;font-family:'Inter',sans-serif;color:var(--text2);background:var(--surface);outline:none;width:180px">
-      <div class="fase-line"></div>
-      <span class="fase-prog" id="fprog-${faseId}">0/0</span>
-      <span class="fase-tog open" id="ftog-${faseId}">▾</span>
-    </div>
-    <div class="fase-body" id="fbody-${faseId}"></div>
-    <button class="btn-new-card" onclick="addCard('${faseId}','${tab}')">+ Nova etapa</button>
-  `;
+  faseEl.innerHTML=+'    <div class="fase-hd" onclick="toggleFase(\\\'\'+(faseId)+\'\\\')">'+'      <input type="text" value="Nova fase" placeholder="Nome da fase..."'+'        onclick="event.stopPropagation()"'+'        oninput="renameFase(\\\'\'+(faseId)+\'\\\',this.value)"'+'        style="font-size:12px;font-weight:600;border:1px solid var(--border2);border-radius:6px;padding:3px 8px;font-family:\\\'Inter\\\',sans-serif;color:var(--text2);background:var(--surface);outline:none;width:180px">'+'      <div class="fase-line"></div>'+'      <span class="fase-prog" id="fprog-\'+(faseId)+\'">0/0</span>'+'      <span class="fase-tog open" id="ftog-\'+(faseId)+\'">▾</span>'+'    </div>'+'    <div class="fase-body" id="fbody-\'+(faseId)+\'"></div>'+'    <button class="btn-new-card" onclick="addCard(\\\'\'+(faseId)+\'\\\',\\\'\'+(tab)+\'\\\')">+ Nova etapa</button>'+'  ';
   panel.insertBefore(faseEl, null);
   panel.appendChild(faseEl);
   // put new fase button after
@@ -1006,13 +1006,13 @@ function addFase(tab){
 }
 
 function renameFase(faseId, value){
-  const chip = document.querySelector(`#fase-${faseId} .fase-chip`);
+  const chip = document.querySelector('#fase-'+(faseId)+' .fase-chip');
   if(chip) chip.textContent = value;
 }
 
 function deleteCard(idx){
   if(!confirm('Remover esta etapa?')) return;
-  const card = document.querySelector(`[data-idx="${idx}"]`);
+  const card = document.querySelector('[data-idx="'+idx+'"');
   if(card) card.remove();
   delete state[idx];
   saveState();
