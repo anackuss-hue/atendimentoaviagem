@@ -128,7 +128,11 @@ input.det-input{background:var(--card)}
 .msg-item{display:flex;gap:10px;margin-bottom:14px}
 .msg-item:last-child{margin-bottom:0}
 .msg-circle{width:24px;height:24px;border-radius:50%;background:var(--gold);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:4px}
-.bubble{background:#fff;border-radius:4px 12px 12px 12px;padding:9px 12px 11px;box-shadow:0 1px 1px rgba(0,0,0,.07);flex:1;max-width:560px}
+.msg-pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bubble{background:#fff;border-radius:4px 12px 12px 12px;padding:9px 12px 11px;box-shadow:0 1px 1px rgba(0,0,0,.07)}
+.bubble.sugestao{background:#F4FAF1;border:1px solid #CBE3C4;border-radius:12px 4px 12px 12px}
+.bubble-tag{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border-radius:99px;padding:2px 8px;margin-bottom:6px;background:var(--soft);color:var(--text3)}
+.bubble-tag.sug{background:#DDF0D6;color:#2E6B3C}
 .bubble-head{display:flex;gap:8px;align-items:center;margin-bottom:5px}
 .bubble-label{flex:1;border:none;background:none;outline:none;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-dark)}
 .bubble-label::placeholder{color:#C9B68F;font-weight:600}
@@ -160,6 +164,7 @@ footer{text-align:center;padding:34px 0 0;font-size:11px;color:var(--text3)}
   .pills{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
   .pill{white-space:nowrap}
   .meta-grid{grid-template-columns:1fr}
+  .msg-pair{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -552,7 +557,7 @@ function getDel(){ if(!state.__del) state.__del=[]; return state.__del; }
 // CONTADORES
 // ─────────────────────────────────────────────
 function countProb(cs){ return cs.problemas.filter(p=>((p&&p.texto)||'').trim()).length; }
-function countMsg(cs){ return (cs.acoes||[]).filter(a=>(((a&&a.label)||'')+((a&&a.texto)||'')).trim()).length; }
+function countMsg(cs){ return (cs.acoes||[]).filter(a=>(((a&&a.label)||'')+((a&&a.texto)||'')+((a&&a.sugestao)||'')).trim()).length; }
 function countSol(cs){ return (cs.solucoes||[]).filter(s=>(s||'').trim()).length; }
 const STATUS_TXT={todo:'● A resolver',doing:'● Em andamento',done:'✓ Resolvido'};
 
@@ -846,11 +851,16 @@ function rmSub(pi,mi){
 function msgHtml(ai,a){
   return '<div class="msg-item" id="msg-'+ai+'">'
     + '<div class="msg-circle">'+(ai+1)+'</div>'
-    + '<div class="bubble"><div class="bubble-head">'
-    + '<input class="bubble-label" type="text" placeholder="Ex: Perfil 1 · Só hospedagem" value="'+esc(a.label)+'" oninput="updAcao('+ai+',\'label\',this.value)">'
+    + '<div style="flex:1;min-width:0">'
+    + '<div class="bubble-head" style="margin-bottom:6px">'
+    + '<input class="bubble-label" style="background:none" type="text" placeholder="Ex: Perfil 1 · Só hospedagem" value="'+esc(a.label)+'" oninput="updAcao('+ai+',\'label\',this.value)">'
     + '<button class="btn-rm" onclick="rmAcao('+ai+')">×</button></div>'
-    + '<textarea class="bubble-ta" rows="2" placeholder="Cole aqui o texto da mensagem..." oninput="updAcao('+ai+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(a.texto)+'</textarea>'
-    + '</div></div>';
+    + '<div class="msg-pair">'
+    + '<div class="bubble atual"><div class="bubble-tag">Atual</div>'
+    + '<textarea class="bubble-ta" rows="2" placeholder="Cole aqui a mensagem que é enviada hoje..." oninput="updAcao('+ai+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(a.texto)+'</textarea></div>'
+    + '<div class="bubble sugestao"><div class="bubble-tag sug">Sugestão</div>'
+    + '<textarea class="bubble-ta" rows="2" placeholder="Escreva aqui a nova versão proposta..." oninput="updAcao('+ai+',\'sugestao\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(a.sugestao||'')+'</textarea></div>'
+    + '</div></div></div>';
 }
 function renderMsgs(){
   const cs=getCS(currentIdx);
@@ -859,7 +869,7 @@ function renderMsgs(){
   document.querySelectorAll('#msg-list textarea').forEach(autoResize);
   refreshCounts();
 }
-function addAcao(){ const cs=getCS(currentIdx); cs.acoes.push({label:'',texto:''}); saveState(); renderMsgs(); const list=document.getElementById('msg-list'); const inp=list.lastElementChild.querySelector('input'); if(inp) inp.focus(); }
+function addAcao(){ const cs=getCS(currentIdx); cs.acoes.push({label:'',texto:'',sugestao:''}); saveState(); renderMsgs(); const list=document.getElementById('msg-list'); const inp=list.lastElementChild.querySelector('input'); if(inp) inp.focus(); }
 function updAcao(ai,field,value){ const cs=getCS(currentIdx); if(cs.acoes[ai]){ cs.acoes[ai][field]=value; saveState(); refreshCounts(); } }
 function rmAcao(ai){ const cs=getCS(currentIdx); cs.acoes.splice(ai,1); saveState(); renderMsgs(); }
 
