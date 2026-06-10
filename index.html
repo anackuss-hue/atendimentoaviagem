@@ -77,7 +77,7 @@ textarea{resize:none;overflow:hidden}
 /* ===== MODAL (card aberto) ===== */
 .overlay{position:fixed;inset:0;background:rgba(42,37,33,.38);display:none;align-items:flex-start;justify-content:center;padding:36px 14px;overflow-y:auto;z-index:100}
 .overlay.show{display:flex}
-.detail{background:var(--card);border-radius:26px;box-shadow:0 24px 70px rgba(42,37,33,.25);max-width:780px;width:100%;padding:32px 38px 38px;animation:pop .18s ease;margin-bottom:40px}
+.detail{background:var(--card);border-radius:26px;box-shadow:0 24px 70px rgba(42,37,33,.25);max-width:880px;width:100%;padding:32px 38px 38px;animation:pop .18s ease;margin-bottom:40px}
 @keyframes pop{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
 .detail-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px}
 .detail-title-ta{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;border:none;background:none;outline:none;width:100%;color:var(--ink);line-height:1.25;border-bottom:1px dashed transparent}
@@ -101,12 +101,32 @@ textarea{resize:none;overflow:hidden}
 .det-input:focus{border-color:var(--gold);background:var(--card)}
 input.det-input{background:var(--card)}
 
+/* diagnóstico — 3 colunas */
+.diag-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:18px;align-items:start}
+.diag-col{background:var(--soft);border:1px solid var(--border);border-radius:var(--radius);padding:12px;min-width:0}
+.col-lbl{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.col-lbl.prob{color:var(--red)}
+.col-lbl.curto{color:var(--green)}
+.col-lbl.longo{color:#2563A8}
+.col-lbl .n2{font-size:10px;background:var(--red-bg);border:1px solid var(--red-border);border-radius:99px;padding:0 7px;font-weight:700}
+.sol-ta.longo{border-color:#BFCFE8;background:#EFF5FD;color:#1A4070}
+.sol-ta.longo:focus{border-color:#2563A8;background:#fff}
+.sol-ta.longo::placeholder{color:#7E9CC4}
+.sol-item{margin-bottom:10px}
+.sol-item .sol-row{margin-bottom:5px}
+.lvl-sel{font-size:10.5px;font-weight:700;letter-spacing:.04em;border-radius:99px;padding:3px 10px;border:1px solid var(--border2);cursor:pointer;background:#fff;color:var(--text3);outline:none;-webkit-appearance:none;appearance:none}
+.lvl-sel.lv-none,.lvl-sel.pr-none{color:var(--text3);background:#fff;border-color:var(--border2)}
+.lvl-sel.lv-baixo,.lvl-sel.pr-baixa{color:var(--green);background:var(--green-bg);border-color:var(--green-border)}
+.lvl-sel.lv-medio,.lvl-sel.pr-media{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border)}
+.lvl-sel.lv-alto,.lvl-sel.pr-alta{color:var(--red);background:var(--red-bg);border-color:var(--red-border)}
+.prob-prio{padding:0 12px 10px 32px}
+
 /* problemas */
 .prob-card{border:1px solid var(--red-border);background:var(--red-bg);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
 .prob-card-head{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;cursor:pointer}
 .prob-arrow{color:var(--red);font-size:11px;margin-top:5px;transition:transform .15s;flex-shrink:0;display:inline-block}
 .prob-arrow.open{transform:rotate(90deg)}
-.prob-title-ta{flex:1;border:none;background:none;outline:none;font-size:13px;color:#6E2424;font-weight:500;line-height:1.5}
+.prob-title-ta{flex:1;min-width:0;border:none;background:none;outline:none;font-size:13px;color:#6E2424;font-weight:500;line-height:1.5}
 .prob-title-ta::placeholder{color:#C08080}
 .btn-rm{border:none;background:none;color:inherit;opacity:.45;cursor:pointer;font-size:15px;flex-shrink:0;padding:2px 4px}
 .btn-rm:hover{opacity:1}
@@ -142,7 +162,7 @@ input.det-input{background:var(--card)}
 
 /* soluções */
 .sol-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
-.sol-ta{flex:1;border:1px solid var(--green-border);border-radius:var(--radius-sm);background:var(--green-bg);padding:10px 13px;font-size:13px;color:#1C4D33;outline:none;line-height:1.55}
+.sol-ta{flex:1;min-width:0;border:1px solid var(--green-border);border-radius:var(--radius-sm);background:var(--green-bg);padding:10px 13px;font-size:13px;color:#1C4D33;outline:none;line-height:1.55}
 .sol-ta:focus{border-color:var(--green);background:#fff}
 .sol-ta::placeholder{color:#7FAE92}
 .sol-row .btn-rm{color:var(--green);margin-top:8px}
@@ -165,6 +185,7 @@ footer{text-align:center;padding:34px 0 0;font-size:11px;color:var(--text3)}
   .pill{white-space:nowrap}
   .meta-grid{grid-template-columns:1fr}
   .msg-pair{grid-template-columns:1fr}
+  .diag-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -541,9 +562,14 @@ function getCS(idx){
     return p;
   });
   if(!state[idx].problemas.length) state[idx].problemas=[{texto:'',comoEnviado:'',oQueEnviado:['']}];
+  state[idx].problemas.forEach(p=>{ if(p.prioridade===undefined) p.prioridade=''; });
   if(!state[idx].solucoes) state[idx].solucoes=[];
+  if(!state[idx].solucoesLongo) state[idx].solucoesLongo=[];
+  state[idx].solucoes = state[idx].solucoes.map(s=> typeof s==='string' ? {texto:s,nivel:''} : (s&&s.texto!==undefined?s:{texto:'',nivel:''}) );
+  state[idx].solucoesLongo = state[idx].solucoesLongo.map(s=> typeof s==='string' ? {texto:s,nivel:''} : (s&&s.texto!==undefined?s:{texto:'',nivel:''}) );
   return state[idx];
 }
+function mkSol(t){ return {texto:t||'', nivel:''}; }
 function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:['']}; }
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&#34;'); }
 function autoResize(ta){ if(!ta||ta.tagName!=='TEXTAREA') return; ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
@@ -558,7 +584,7 @@ function getDel(){ if(!state.__del) state.__del=[]; return state.__del; }
 // ─────────────────────────────────────────────
 function countProb(cs){ return cs.problemas.filter(p=>((p&&p.texto)||'').trim()).length; }
 function countMsg(cs){ return (cs.acoes||[]).filter(a=>(((a&&a.label)||'')+((a&&a.texto)||'')+((a&&a.sugestao)||'')).trim()).length; }
-function countSol(cs){ return (cs.solucoes||[]).filter(s=>(s||'').trim()).length; }
+function countSol(cs){ return (cs.solucoes||[]).filter(s=>((s&&s.texto)||'').trim()).length + (cs.solucoesLongo||[]).filter(s=>((s&&s.texto)||'').trim()).length; }
 const STATUS_TXT={todo:'● A resolver',doing:'● Em andamento',done:'✓ Resolvido'};
 
 // ─────────────────────────────────────────────
@@ -623,7 +649,7 @@ function renderAll(){
         if(!cs.prazo) cs.prazo=card.prazo;
         if(isNew && card.problemas.length) cs.problemas=card.problemas.map(p=>typeof p==='string'?mkProblema(p):(p||mkProblema('')));
         if(!cs.problemas.length) cs.problemas=[mkProblema('')];
-        if(!cs.solucoes||!cs.solucoes.length) cs.solucoes=card.solucoes.length?[...card.solucoes]:[''];
+        if(!cs.solucoes||!cs.solucoes.length) cs.solucoes=card.solucoes.length?card.solucoes.map(s=>mkSol(typeof s==='string'?s:(s&&s.texto)||'')):[mkSol('')];
         if(del.indexOf(idx)===-1) grid.insertAdjacentHTML('beforeend', pcardHtml(idx));
       });
       grid.insertAdjacentHTML('beforeend','<button class="btn-newcard" onclick="addCard(\''+fase.id+'\',\''+tab+'\')">+ Nova etapa</button>');
@@ -728,29 +754,23 @@ function openCard(idx){
     + '<button class="hd-btn del" title="Remover etapa" onclick="deleteCard()">🗑</button>'
     + '<button class="hd-btn" title="Fechar" onclick="closeCard()">✕</button></div>'
     + '<div class="pills">'
-    + '<button class="pill active" id="pill-problema" onclick="modalTab(\'problema\')">⚠️ Problemas <span class="n" id="n-prob">'+np+'</span></button>'
+    + '<button class="pill active" id="pill-diagnostico" onclick="modalTab(\'diagnostico\')">🔎 Diagnóstico <span class="n" id="n-prob">'+np+'</span></button>'
     + '<button class="pill" id="pill-mensagens" onclick="modalTab(\'mensagens\')">💬 Mensagens <span class="n" id="n-msg">'+nm+'</span></button>'
-    + '<button class="pill" id="pill-solucoes" onclick="modalTab(\'solucoes\')">✅ Soluções <span class="n" id="n-sol">'+ns+'</span></button>'
     + '</div>'
-    + '<div class="tabview active" id="t-problema">'
+    + '<div class="tabview active" id="t-diagnostico">'
     + '<div class="flabel">Como funciona hoje</div>'
     + '<textarea class="det-input" rows="2" placeholder="Descreva o processo atual..." oninput="updateF(\'processo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.processo)+'</textarea>'
-    + '<div class="flabel">Problemas</div>'
+    + '<div class="diag-grid">'
+    + '<div class="diag-col"><div class="col-lbl prob">⚠ Problemas <span class="n2" id="n-prob2">'+np+'</span></div>'
     + '<div id="prob-list">'+cs.problemas.map((p,pi)=>probHtml(pi,p)).join('')+'</div>'
-    + '<button class="btn-add" onclick="addProblema()">+ Adicionar problema</button>'
+    + '<button class="btn-add sm" onclick="addProblema()">+ Problema</button></div>'
+    + '<div class="diag-col"><div class="col-lbl curto">💡 Solução 01</div>'
+    + '<div id="sol-list">'+cs.solucoes.map((s,si)=>solHtml('solucoes',si,s)).join('')+'</div>'
+    + '<button class="btn-add sm" onclick="addSolGen(\'solucoes\')">+ Solução 01</button></div>'
+    + '<div class="diag-col"><div class="col-lbl longo">🎯 Solução 02</div>'
+    + '<div id="solL-list">'+(cs.solucoesLongo.length?cs.solucoesLongo:[mkSol('')]).map((s,si)=>solHtml('solucoesLongo',si,s)).join('')+'</div>'
+    + '<button class="btn-add sm" onclick="addSolGen(\'solucoesLongo\')">+ Solução 02</button></div>'
     + '</div>'
-    + '<div class="tabview" id="t-mensagens">'
-    + '<div class="flabel">Mensagens enviadas nesta etapa</div>'
-    + '<div class="wa-wrap"><div id="msg-list">'+(cs.acoes.length?cs.acoes.map((a,ai)=>msgHtml(ai,a)).join(''):'')+'</div>'
-    + (cs.acoes.length?'':'<div class="msg-hint" id="msg-empty">Nenhuma mensagem cadastrada nesta etapa ainda.</div>')
-    + '</div>'
-    + '<button class="btn-add" onclick="addAcao()">+ Adicionar mensagem</button>'
-    + '<div class="msg-hint">Dica: use variáveis como {primeiro_nome}, {casal} e {cidade} para os campos dinâmicos do Guest.</div>'
-    + '</div>'
-    + '<div class="tabview" id="t-solucoes">'
-    + '<div class="flabel">Possíveis soluções</div>'
-    + '<div id="sol-list">'+cs.solucoes.map((s,si)=>solHtml(si,s)).join('')+'</div>'
-    + '<button class="btn-add" onclick="addSol()">+ Adicionar solução</button>'
     + '<div class="flabel" style="margin-top:24px">Acompanhamento</div>'
     + '<div class="meta-grid">'
     + '<div><div class="sub-lbl" style="color:var(--text3)">Status</div>'
@@ -762,7 +782,16 @@ function openCard(idx){
     + '<input class="det-input" type="text" value="'+esc(cs.responsavel)+'" oninput="updateF(\'responsavel\',this.value)"></div>'
     + '<div><div class="sub-lbl" style="color:var(--text3)">Prazo</div>'
     + '<input class="det-input" type="date" value="'+esc(cs.prazo)+'" onchange="updateF(\'prazo\',this.value)"></div>'
-    + '</div></div>';
+    + '</div></div>'
+    + '<div class="tabview" id="t-mensagens">'
+    + '<div class="flabel">Mensagens enviadas nesta etapa</div>'
+    + '<div class="wa-wrap"><div id="msg-list">'+(cs.acoes.length?cs.acoes.map((a,ai)=>msgHtml(ai,a)).join(''):'')+'</div>'
+    + (cs.acoes.length?'':'<div class="msg-hint" id="msg-empty">Nenhuma mensagem cadastrada nesta etapa ainda.</div>')
+    + '</div>'
+    + '<button class="btn-add" onclick="addAcao()">+ Adicionar mensagem</button>'
+    + '<div class="msg-hint">Dica: use variáveis como {primeiro_nome}, {casal} e {cidade} para os campos dinâmicos do Guest.</div>'
+    + '</div>';
+  if(!cs.solucoesLongo.length){ cs.solucoesLongo=[mkSol('')]; }
   document.getElementById('overlay').classList.add('show');
   document.body.style.overflow='hidden';
   setTimeout(()=>{ d.querySelectorAll('textarea').forEach(autoResize); },30);
@@ -785,10 +814,10 @@ function modalTab(id){
 
 function refreshCounts(){
   const cs=getCS(currentIdx);
-  const np=document.getElementById('n-prob'), nm=document.getElementById('n-msg'), ns=document.getElementById('n-sol');
+  const np=document.getElementById('n-prob'), nm=document.getElementById('n-msg'), np2=document.getElementById('n-prob2');
   if(np) np.textContent=countProb(cs);
+  if(np2) np2.textContent=countProb(cs);
   if(nm) nm.textContent=countMsg(cs);
-  if(ns) ns.textContent=countSol(cs);
 }
 
 function updateF(field,value){ const cs=getCS(currentIdx); cs[field]=value; saveState(); }
@@ -802,6 +831,7 @@ function changeStatus(value){
 // ── PROBLEMAS ──
 function probHtml(pi,p){
   const msgs=(p.oQueEnviado||['']);
+  const pr=p.prioridade||'';
   const msgsHtml=msgs.map((m,mi)=>
     '<div class="sub-row"><span class="sub-num">'+(mi+1)+'</span>'
     + '<textarea class="sub-ta" rows="1" placeholder="Descreva a ação ou mensagem..." oninput="updSub('+pi+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea>'
@@ -812,6 +842,12 @@ function probHtml(pi,p){
     + '<span class="prob-arrow" id="parr-'+pi+'" onclick="toggleProb('+pi+')">▶</span>'
     + '<textarea class="prob-title-ta" rows="1" placeholder="⚠ Descreva o problema..." oninput="updProb('+pi+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(p.texto)+'</textarea>'
     + '<button class="btn-rm" style="color:var(--red)" onclick="rmProb('+pi+')">×</button></div>'
+    + '<div class="prob-prio">'
+    + '<select class="lvl-sel pr-'+(pr||'none')+'" onchange="updProb('+pi+',\'prioridade\',this.value);this.className=\'lvl-sel pr-\'+(this.value||\'none\')">'
+    + '<option value=""'+(pr===''?' selected':'')+'>Prioridade...</option>'
+    + '<option value="baixa"'+(pr==='baixa'?' selected':'')+'>Baixa</option>'
+    + '<option value="media"'+(pr==='media'?' selected':'')+'>Média</option>'
+    + '<option value="alta"'+(pr==='alta'?' selected':'')+'>Alta</option></select></div>'
     + '<div class="prob-body" id="pbody-'+pi+'">'
     + '<div class="sub-lbl">Como é feito</div>'
     + '<input class="sub-input" type="text" placeholder="Ex: manualmente pela Juliana..." value="'+esc(p.comoEnviado)+'" oninput="updProb('+pi+',\'comoEnviado\',this.value)">'
@@ -873,24 +909,36 @@ function addAcao(){ const cs=getCS(currentIdx); cs.acoes.push({label:'',texto:''
 function updAcao(ai,field,value){ const cs=getCS(currentIdx); if(cs.acoes[ai]){ cs.acoes[ai][field]=value; saveState(); refreshCounts(); } }
 function rmAcao(ai){ const cs=getCS(currentIdx); cs.acoes.splice(ai,1); saveState(); renderMsgs(); }
 
-// ── SOLUÇÕES ──
-function solHtml(si,s){
-  return '<div class="sol-row" id="sol-'+si+'">'
-    + '<textarea class="sol-ta" rows="1" placeholder="💡 Descreva uma solução..." oninput="updSol('+si+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s)+'</textarea>'
-    + '<button class="btn-rm" onclick="rmSol('+si+')">×</button></div>';
+// ── SOLUÇÕES (01 e 02) ──
+const NIVEL_TXT={'':'Nível...', baixo:'Baixo', medio:'Médio', alto:'Alto'};
+function solHtml(field,si,s){
+  const cls=field==='solucoes'?'sol-ta':'sol-ta longo';
+  const ph=field==='solucoes'?'💡 Descreva a solução 01...':'🎯 Descreva a solução 02...';
+  const nv=s.nivel||'';
+  return '<div class="sol-item">'
+    + '<div class="sol-row">'
+    + '<textarea class="'+cls+'" rows="1" placeholder="'+ph+'" oninput="updSolGen(\''+field+'\','+si+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s.texto)+'</textarea>'
+    + '<button class="btn-rm" onclick="rmSolGen(\''+field+'\','+si+')">×</button></div>'
+    + '<select class="lvl-sel lv-'+(nv||'none')+'" onchange="updSolGen(\''+field+'\','+si+',\'nivel\',this.value);this.className=\'lvl-sel lv-\'+(this.value||\'none\')">'
+    + '<option value=""'+(nv===''?' selected':'')+'>Nível...</option>'
+    + '<option value="baixo"'+(nv==='baixo'?' selected':'')+'>Baixo</option>'
+    + '<option value="medio"'+(nv==='medio'?' selected':'')+'>Médio</option>'
+    + '<option value="alto"'+(nv==='alto'?' selected':'')+'>Alto</option></select>'
+    + '</div>';
 }
-function renderSols(){
+function listIdOf(field){ return field==='solucoes'?'sol-list':'solL-list'; }
+function renderSols(field){
   const cs=getCS(currentIdx);
-  document.getElementById('sol-list').innerHTML=cs.solucoes.map((s,si)=>solHtml(si,s)).join('');
-  document.querySelectorAll('#sol-list textarea').forEach(autoResize);
-  refreshCounts();
+  if(!cs[field].length) cs[field]=[mkSol('')];
+  document.getElementById(listIdOf(field)).innerHTML=cs[field].map((s,si)=>solHtml(field,si,s)).join('');
+  document.querySelectorAll('#'+listIdOf(field)+' textarea').forEach(autoResize);
 }
-function addSol(){ const cs=getCS(currentIdx); cs.solucoes.push(''); saveState(); renderSols(); const list=document.getElementById('sol-list'); const ta=list.lastElementChild.querySelector('textarea'); if(ta) ta.focus(); }
-function updSol(si,value){ const cs=getCS(currentIdx); cs.solucoes[si]=value; saveState(); refreshCounts(); }
-function rmSol(si){
+function addSolGen(field){ const cs=getCS(currentIdx); cs[field].push(mkSol('')); saveState(); renderSols(field); const list=document.getElementById(listIdOf(field)); const ta=list.lastElementChild.querySelector('textarea'); if(ta) ta.focus(); }
+function updSolGen(field,si,prop,value){ const cs=getCS(currentIdx); if(cs[field][si]){ cs[field][si][prop]=value; saveState(); } }
+function rmSolGen(field,si){
   const cs=getCS(currentIdx);
-  if(cs.solucoes.length<=1) cs.solucoes[0]=''; else cs.solucoes.splice(si,1);
-  saveState(); renderSols();
+  if(cs[field].length<=1) cs[field][0]=mkSol(''); else cs[field].splice(si,1);
+  saveState(); renderSols(field);
 }
 
 // ─────────────────────────────────────────────
