@@ -123,22 +123,44 @@ input.det-input{background:var(--card)}
 
 /* problemas */
 .prob-card{border:1px solid var(--red-border);background:var(--red-bg);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
+.prob-card.curto{border-color:var(--green-border);background:var(--green-bg)}
+.prob-card.longo{border-color:#BFCFE8;background:#EFF5FD}
 .prob-card-head{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;cursor:pointer}
-.prob-arrow{color:var(--red);font-size:11px;margin-top:5px;transition:transform .15s;flex-shrink:0;display:inline-block}
+.prob-arrow{color:var(--red);font-size:11px;margin-top:5px;transition:transform .15s;flex-shrink:0;display:inline-block;cursor:pointer}
+.prob-arrow.curto{color:var(--green)}
+.prob-arrow.longo{color:#2563A8}
 .prob-arrow.open{transform:rotate(90deg)}
 .prob-title-ta{flex:1;min-width:0;border:none;background:none;outline:none;font-size:13px;color:#6E2424;font-weight:500;line-height:1.5}
 .prob-title-ta::placeholder{color:#C08080}
+.prob-title-ta.curto{color:#1C4D33}
+.prob-title-ta.curto::placeholder{color:#7FAE92}
+.prob-title-ta.longo{color:#1A4070}
+.prob-title-ta.longo::placeholder{color:#7E9CC4}
 .btn-rm{border:none;background:none;color:inherit;opacity:.45;cursor:pointer;font-size:15px;flex-shrink:0;padding:2px 4px}
 .btn-rm:hover{opacity:1}
 .prob-body{display:none;padding:2px 14px 13px 32px;border-top:1px dashed var(--red-border)}
+.prob-body.curto{border-top-color:var(--green-border)}
+.prob-body.longo{border-top-color:#BFCFE8}
 .prob-body.open{display:block}
 .sub-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#A05050;margin:11px 0 5px}
+.sub-lbl.curto{color:#4E8A66}
+.sub-lbl.longo{color:#4A72A8}
 .sub-input{width:100%;border:1px solid var(--red-border);border-radius:7px;background:#fff;padding:7px 10px;font-size:12.5px;color:#6E2424;outline:none}
 .sub-input:focus{border-color:var(--red)}
+.sub-input.curto{border-color:var(--green-border);color:#1C4D33}
+.sub-input.curto:focus{border-color:var(--green)}
+.sub-input.longo{border-color:#BFCFE8;color:#1A4070}
+.sub-input.longo:focus{border-color:#2563A8}
 .sub-row{display:flex;gap:7px;align-items:flex-start;margin-bottom:6px}
 .sub-num{width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--red-border);color:var(--red);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:6px}
-.sub-ta{flex:1;border:1px solid var(--red-border);border-radius:7px;background:#fff;padding:7px 10px;font-size:12.5px;color:#6E2424;outline:none;line-height:1.5}
+.sub-num.curto{border-color:var(--green-border);color:var(--green)}
+.sub-num.longo{border-color:#BFCFE8;color:#2563A8}
+.sub-ta{flex:1;min-width:0;border:1px solid var(--red-border);border-radius:7px;background:#fff;padding:7px 10px;font-size:12.5px;color:#6E2424;outline:none;line-height:1.5}
 .sub-ta:focus{border-color:var(--red)}
+.sub-ta.curto{border-color:var(--green-border);color:#1C4D33}
+.sub-ta.curto:focus{border-color:var(--green)}
+.sub-ta.longo{border-color:#BFCFE8;color:#1A4070}
+.sub-ta.longo:focus{border-color:#2563A8}
 .btn-add{border:1px dashed var(--border2);background:none;border-radius:var(--radius-sm);padding:9px 14px;font-size:12px;color:var(--text3);cursor:pointer;width:100%;text-align:left;transition:all .15s;margin-top:4px}
 .btn-add:hover{border-color:var(--gold);color:var(--gold-dark)}
 .btn-add.sm{padding:6px 11px;font-size:11.5px;margin-top:2px}
@@ -565,11 +587,18 @@ function getCS(idx){
   state[idx].problemas.forEach(p=>{ if(p.prioridade===undefined) p.prioridade=''; });
   if(!state[idx].solucoes) state[idx].solucoes=[];
   if(!state[idx].solucoesLongo) state[idx].solucoesLongo=[];
-  state[idx].solucoes = state[idx].solucoes.map(s=> typeof s==='string' ? {texto:s,nivel:''} : (s&&s.texto!==undefined?s:{texto:'',nivel:''}) );
-  state[idx].solucoesLongo = state[idx].solucoesLongo.map(s=> typeof s==='string' ? {texto:s,nivel:''} : (s&&s.texto!==undefined?s:{texto:'',nivel:''}) );
+  state[idx].solucoes = state[idx].solucoes.map(normSol);
+  state[idx].solucoesLongo = state[idx].solucoesLongo.map(normSol);
   return state[idx];
 }
-function mkSol(t){ return {texto:t||'', nivel:''}; }
+function normSol(s){
+  if(typeof s==='string') s={texto:s};
+  if(!s||s.texto===undefined) s={texto:''};
+  if(!s.nivel) s.nivel='';
+  if(!s.comoSera) s.comoSera='';
+  if(!s.oQueSera||!s.oQueSera.length) s.oQueSera=[''];
+  return s;
+}
 function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:['']}; }
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&#34;'); }
 function autoResize(ta){ if(!ta||ta.tagName!=='TEXTAREA') return; ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
@@ -909,22 +938,37 @@ function addAcao(){ const cs=getCS(currentIdx); cs.acoes.push({label:'',texto:''
 function updAcao(ai,field,value){ const cs=getCS(currentIdx); if(cs.acoes[ai]){ cs.acoes[ai][field]=value; saveState(); refreshCounts(); } }
 function rmAcao(ai){ const cs=getCS(currentIdx); cs.acoes.splice(ai,1); saveState(); renderMsgs(); }
 
-// ── SOLUÇÕES (01 e 02) ──
-const NIVEL_TXT={'':'Nível...', baixo:'Baixo', medio:'Médio', alto:'Alto'};
+// ── SOLUÇÕES (01 e 02) — mesmo formato dos problemas ──
+function mkSol(t){ return {texto:t||'', nivel:'', comoSera:'', oQueSera:['']}; }
+function fkey(field){ return field==='solucoes'?'s1':'s2'; }
 function solHtml(field,si,s){
-  const cls=field==='solucoes'?'sol-ta':'sol-ta longo';
-  const ph=field==='solucoes'?'💡 Descreva a solução 01...':'🎯 Descreva a solução 02...';
+  const fk=fkey(field), variant=field==='solucoes'?'curto':'longo';
   const nv=s.nivel||'';
-  return '<div class="sol-item">'
-    + '<div class="sol-row">'
-    + '<textarea class="'+cls+'" rows="1" placeholder="'+ph+'" oninput="updSolGen(\''+field+'\','+si+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s.texto)+'</textarea>'
+  const subs=(s.oQueSera&&s.oQueSera.length?s.oQueSera:['']);
+  const subsHtml=subs.map((m,mi)=>
+    '<div class="sub-row"><span class="sub-num '+variant+'">'+(mi+1)+'</span>'
+    + '<textarea class="sub-ta '+variant+'" rows="1" placeholder="Descreva a ação..." oninput="updSolSub(\''+field+'\','+si+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea>'
+    + '<button class="btn-rm" onclick="rmSolSub(\''+field+'\','+si+','+mi+')">×</button></div>'
+  ).join('');
+  const ph=field==='solucoes'?'💡 Descreva a solução 01...':'🎯 Descreva a solução 02...';
+  return '<div class="prob-card '+variant+'" id="solcard-'+fk+'-'+si+'">'
+    + '<div class="prob-card-head">'
+    + '<span class="prob-arrow '+variant+'" id="sarr-'+fk+'-'+si+'" onclick="toggleSol(\''+field+'\','+si+')">▶</span>'
+    + '<textarea class="prob-title-ta '+variant+'" rows="1" placeholder="'+ph+'" oninput="updSolGen(\''+field+'\','+si+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s.texto)+'</textarea>'
     + '<button class="btn-rm" onclick="rmSolGen(\''+field+'\','+si+')">×</button></div>'
+    + '<div class="prob-prio">'
     + '<select class="lvl-sel lv-'+(nv||'none')+'" onchange="updSolGen(\''+field+'\','+si+',\'nivel\',this.value);this.className=\'lvl-sel lv-\'+(this.value||\'none\')">'
     + '<option value=""'+(nv===''?' selected':'')+'>Nível...</option>'
     + '<option value="baixo"'+(nv==='baixo'?' selected':'')+'>Baixo</option>'
     + '<option value="medio"'+(nv==='medio'?' selected':'')+'>Médio</option>'
-    + '<option value="alto"'+(nv==='alto'?' selected':'')+'>Alto</option></select>'
-    + '</div>';
+    + '<option value="alto"'+(nv==='alto'?' selected':'')+'>Alto</option></select></div>'
+    + '<div class="prob-body '+variant+'" id="sbody-'+fk+'-'+si+'">'
+    + '<div class="sub-lbl '+variant+'">Como será feito</div>'
+    + '<input class="sub-input '+variant+'" type="text" placeholder="Ex: exportação automática no WelcomeCRM..." value="'+esc(s.comoSera||'')+'" oninput="updSolGen(\''+field+'\','+si+',\'comoSera\',this.value)">'
+    + '<div class="sub-lbl '+variant+'">O que será feito / enviado</div>'
+    + '<div>'+subsHtml+'</div>'
+    + '<button class="btn-add sm" onclick="addSolSub(\''+field+'\','+si+')">+ Adicionar ação</button>'
+    + '</div></div>';
 }
 function listIdOf(field){ return field==='solucoes'?'sol-list':'solL-list'; }
 function renderSols(field){
@@ -933,12 +977,36 @@ function renderSols(field){
   document.getElementById(listIdOf(field)).innerHTML=cs[field].map((s,si)=>solHtml(field,si,s)).join('');
   document.querySelectorAll('#'+listIdOf(field)+' textarea').forEach(autoResize);
 }
+function toggleSol(field,si){
+  const fk=fkey(field);
+  document.getElementById('sbody-'+fk+'-'+si).classList.toggle('open');
+  document.getElementById('sarr-'+fk+'-'+si).classList.toggle('open');
+  setTimeout(()=>{ document.querySelectorAll('#sbody-'+fk+'-'+si+' textarea').forEach(autoResize); },20);
+}
 function addSolGen(field){ const cs=getCS(currentIdx); cs[field].push(mkSol('')); saveState(); renderSols(field); const list=document.getElementById(listIdOf(field)); const ta=list.lastElementChild.querySelector('textarea'); if(ta) ta.focus(); }
 function updSolGen(field,si,prop,value){ const cs=getCS(currentIdx); if(cs[field][si]){ cs[field][si][prop]=value; saveState(); } }
 function rmSolGen(field,si){
   const cs=getCS(currentIdx);
   if(cs[field].length<=1) cs[field][0]=mkSol(''); else cs[field].splice(si,1);
   saveState(); renderSols(field);
+}
+function addSolSub(field,si){
+  const cs=getCS(currentIdx);
+  if(!cs[field][si].oQueSera) cs[field][si].oQueSera=[''];
+  cs[field][si].oQueSera.push('');
+  saveState(); renderSols(field);
+  const fk=fkey(field);
+  document.getElementById('sbody-'+fk+'-'+si).classList.add('open');
+  document.getElementById('sarr-'+fk+'-'+si).classList.add('open');
+}
+function updSolSub(field,si,mi,value){ const cs=getCS(currentIdx); if(cs[field][si]&&cs[field][si].oQueSera) cs[field][si].oQueSera[mi]=value; saveState(); }
+function rmSolSub(field,si,mi){
+  const cs=getCS(currentIdx); const arr=cs[field][si].oQueSera;
+  if(arr.length<=1) arr[0]=''; else arr.splice(mi,1);
+  saveState(); renderSols(field);
+  const fk=fkey(field);
+  document.getElementById('sbody-'+fk+'-'+si).classList.add('open');
+  document.getElementById('sarr-'+fk+'-'+si).classList.add('open');
 }
 
 // ─────────────────────────────────────────────
