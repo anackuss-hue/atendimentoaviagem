@@ -4,259 +4,200 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Jornadas · Welcome Weddings</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#F8F7F5;--surface:#FFFFFF;--surface2:#FAFAF8;
-  --border:#ECEAE4;--border2:#E0DDD5;
-  --text:#1A1916;--text2:#5C5A55;--text3:#9A9890;
-  --accent:#8B6A3E;--accent-light:#F0E8DB;--accent-mid:#C9A87C;
-  --red:#C0392B;--red-bg:#FDF3F2;--red-border:#F5C6C2;
-  --orange:#D4700A;--orange-bg:#FEF6EE;--orange-border:#F9D4A3;
-  --green:#2E7D52;--green-bg:#F0F8F3;--green-border:#A8D9BC;
-  --blue:#2563A8;--blue-bg:#EFF5FD;--blue-border:#BFCFE8;
-  --purple:#5B3FA6;--purple-bg:#F3F0FB;--purple-border:#C9BDE8;
-  --gray-bg:#F4F3F0;--gray-border:#DDDBD4;
-  --radius:10px;--radius-sm:6px;
+  --bg:#EFEBE4; --card:#FFFFFF; --soft:#F3F0EA; --soft2:#EAE6DD;
+  --ink:#2A2521; --text2:#5C554C; --text3:#9A917F;
+  --border:#ECE7DD; --border2:#DFD8CA;
+  --gold:#B08D4F; --gold-dark:#9C7B40; --gold-soft:#F6F0E4;
+  --red:#B43A3A; --red-bg:#FBF1F0; --red-border:#EDCFCB;
+  --green:#2E7D54; --green-bg:#F1F8F3; --green-border:#CDE5D4;
+  --amber:#9A6B1F; --amber-bg:#FBF5E9; --amber-border:#ECDDBC;
+  --radius:18px; --radius-sm:10px;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;font-size:14px;line-height:1.55;padding:26px 18px 80px}
+.wrap{max-width:1080px;margin:0 auto}
+textarea,input,select{font-family:'Inter',sans-serif}
+textarea{resize:none;overflow:hidden}
 
-/* ── HEADER ── */
-header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:100;display:flex;align-items:stretch;gap:0}
-.header-brand{display:flex;align-items:center;gap:12px;padding:16px 0;margin-right:32px;border-right:1px solid var(--border)}
-.header-logo{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;color:#fff;font-weight:600;margin-right:4px}
-.header-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:600;color:var(--text)}
-.header-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.header-tabs{display:flex;align-items:stretch;gap:0}
-.tab-btn{padding:0 20px;font-size:13px;font-family:'Inter',sans-serif;font-weight:500;color:var(--text2);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
-.tab-btn:hover{color:var(--text)}
-.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:24px;padding:16px 0}
-.stat-group{display:flex;gap:20px}
-.stat{text-align:center}
-.stat-num{font-size:18px;font-weight:600;line-height:1;font-family:'Playfair Display',serif}
-.stat-label{font-size:10px;color:var(--text3);margin-top:1px;letter-spacing:.04em;text-transform:uppercase}
+/* ===== TOPO ===== */
+.topbar{display:flex;align-items:center;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+.logo{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;flex-shrink:0}
+.top-title{font-weight:600;font-size:15px}
+.top-sub{font-size:11.5px;color:var(--text3)}
+.jtabs{margin-left:auto;display:flex;gap:8px}
+.jtab{border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:600;color:var(--text2);padding:9px 18px;border-radius:12px;cursor:pointer;transition:all .15s}
+.jtab:hover{border-color:var(--border2)}
+.jtab.active{background:var(--gold);border-color:var(--gold);color:#fff;box-shadow:0 2px 8px rgba(176,141,79,.35)}
 
-/* ── PROGRESS ── */
-.progress-bar-wrap{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 40px;display:flex;align-items:center;gap:14px}
-.progress-bar-bg{flex:1;background:var(--border);border-radius:99px;height:4px;overflow:hidden}
-.progress-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent-mid),var(--green));transition:width .5s ease;width:0%}
-.progress-txt{font-size:11px;color:var(--text3);white-space:nowrap}
+.subbar{display:flex;align-items:center;gap:8px;margin:14px 0 6px;flex-wrap:wrap}
+.fbtn{border:1px solid var(--border2);background:var(--card);border-radius:99px;padding:5px 14px;font-size:12px;cursor:pointer;color:var(--text2);transition:all .15s;font-weight:500}
+.fbtn:hover{border-color:var(--gold)}
+.fbtn.active{background:var(--ink);border-color:var(--ink);color:#fff}
+.statline{margin-left:auto;font-size:12px;color:var(--text3)}
+.statline b{color:var(--ink);font-weight:600}
 
-/* ── FILTERS ── */
-.filters{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 40px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.filters-lbl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-right:4px}
-.fbtn{border:1px solid var(--border2);background:var(--surface);border-radius:99px;padding:4px 12px;font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;color:var(--text2);transition:all .15s}
-.fbtn:hover{border-color:var(--accent-mid);color:var(--accent)}
-.fbtn.active{background:var(--accent);border-color:var(--accent);color:#fff}
-
-/* ── MAIN ── */
-main{padding:24px 40px;max-width:1200px;margin:0 auto}
-
-/* ── FASE ── */
-.fase{margin-bottom:24px}
-.fase-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;cursor:pointer;user-select:none;padding:8px 0}
-.fase-line{flex:1;height:1px;background:var(--border)}
-.fase-chip{font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;letter-spacing:.02em;white-space:nowrap}
-.fase-prog{font-size:11px;color:var(--text3)}
-.fase-tog{font-size:12px;color:var(--text3);transition:transform .2s}
-.fase-tog.open{transform:rotate(180deg)}
-.fase-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:8px}
-.fase-body.collapsed{display:none}
-
-/* ── CARD ── */
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:box-shadow .18s,transform .18s;cursor:default;position:relative}
-.card:hover{box-shadow:0 2px 16px rgba(0,0,0,.07);transform:translateY(-1px)}
-.card-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:var(--radius) 0 0 var(--radius)}
-.card.todo .card-stripe{background:var(--border2)}
-.card.doing{background:var(--orange-bg);border-color:var(--orange-border)}
-.card.doing .card-stripe{background:var(--orange)}
-.card.done{background:var(--green-bg);border-color:var(--green-border)}
-.card.done .card-stripe{background:var(--green)}
-
-/* CARD HEAD */
-.card-head{padding:12px 12px 10px 16px}
-.card-top{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
-.card-title-ta{font-size:13px;font-weight:500;flex:1;border:none;background:transparent;font-family:'Inter',sans-serif;color:var(--text);resize:none;outline:none;min-height:18px;line-height:1.45;padding:0;cursor:text}
-.card-title-ta:focus{background:rgba(0,0,0,.03);border-radius:4px;padding:2px 4px;margin:-2px -4px}
-.card.done .card-title-ta{text-decoration:line-through;color:var(--text3)}
-.card-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;background:var(--border2)}
-.card.doing .card-dot{background:var(--orange)}
-.card.done .card-dot{background:var(--green)}
-.card-foot{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
-.tags{display:flex;gap:4px;flex-wrap:wrap}
-.tag{font-size:10px;padding:2px 7px;border-radius:99px;font-weight:500;white-space:nowrap;line-height:1.4}
-.status-sel{border:1px solid var(--border2);border-radius:var(--radius-sm);padding:3px 7px;font-size:11px;font-family:'Inter',sans-serif;background:var(--bg);color:var(--text2);cursor:pointer;outline:none}
-.status-sel:hover{border-color:var(--accent-mid)}
-
-/* EXPAND BTN */
-.card-expbtn{width:100%;background:none;border:none;border-top:1px solid var(--border);padding:6px 12px 6px 16px;font-size:11px;color:var(--text3);cursor:pointer;text-align:left;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:4px;transition:background .12s}
-.card-expbtn:hover{background:var(--bg)}
-.card-expbtn .arr{transition:transform .18s;display:inline-block;font-size:10px}
-.card-expbtn.open .arr{transform:rotate(180deg)}
-
-/* CARD DETAIL */
-.card-det{display:none;padding:12px 12px 14px 16px;border-top:1px solid var(--border);background:var(--surface2)}
-.card-det.open{display:block}
-.det-sec{margin-bottom:11px}
-.det-sec:last-child{margin-bottom:0}
-.det-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:4px;font-weight:600}
-.det-input{width:100%;border:1px solid var(--border2);border-radius:var(--radius-sm);padding:6px 8px;font-size:12px;font-family:'Inter',sans-serif;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s;line-height:1.5}
-.det-input:focus{border-color:var(--accent-mid);box-shadow:0 0 0 2px var(--accent-light)}
-.det-input::placeholder{color:var(--text3)}
-textarea.det-input{resize:vertical;min-height:56px}
-.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-
-/* LISTAS COLORIDAS */
-.list-wrap{display:flex;flex-direction:column;gap:4px}
-.list-row{display:flex;gap:5px;align-items:flex-start}
-.list-ta{flex:1;border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;outline:none;resize:none;min-height:30px;line-height:1.4;transition:border-color .15s}
-.list-ta:focus{box-shadow:0 0 0 2px rgba(0,0,0,.06)}
-
-/* problema = vermelho suave */
-.prob-ta{background:#FEF9F9;border:1px solid var(--red-border);color:#7A1515}
-.prob-ta:focus{border-color:#E07070}
-.prob-ta::placeholder{color:#C08080;opacity:.7}
-
-/* problema card expandível */
-.prob-card{background:#FEF9F9;border:1px solid var(--red-border);border-radius:var(--radius-sm);margin-bottom:5px;overflow:hidden}
-.prob-card-head{display:flex;align-items:flex-start;gap:6px;padding:6px 8px 6px 10px;cursor:pointer}
-.prob-card-head:hover{background:rgba(192,57,43,.04)}
-.prob-card-arrow{font-size:10px;color:#C08080;transition:transform .15s;flex-shrink:0;margin-top:3px}
-.prob-card-arrow.open{transform:rotate(90deg)}
-.prob-card-title{flex:1;font-size:12px;color:#7A1515;line-height:1.45;font-family:'Inter',sans-serif;border:none;background:transparent;outline:none;resize:none;min-height:18px;padding:0;cursor:text;font-weight:400}
-.prob-card-title:focus{background:rgba(192,57,43,.06);border-radius:3px;padding:1px 3px;margin:-1px -3px}
-.prob-card-body{display:block;padding:8px 10px 10px 10px;border-top:1px solid var(--red-border);background:#FDF4F4}
-.prob-card-body.collapsed{display:none}
-.prob-sub-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#A04040;margin-bottom:4px;font-weight:600}
-.prob-sub-input{width:100%;border:1px solid #F0C0C0;border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;background:#fff;color:#5A1515;outline:none;line-height:1.45}
-.prob-sub-input:focus{border-color:#D07070;box-shadow:0 0 0 2px rgba(192,57,43,.08)}
-.prob-sub-input::placeholder{color:#C09090;opacity:.7}
-
-/* mensagens visuais */
-.msgs-wrap{display:flex;flex-direction:column;gap:4px;margin-top:2px}
-.msg-row{display:flex;gap:5px;align-items:flex-start}
-.msg-num{font-size:10px;font-weight:600;color:#A04040;background:#F5D5D5;border-radius:99px;min-width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:4px}
-.msg-ta{flex:1;background:#fff;border:1px solid #F0C0C0;border-radius:var(--radius-sm);padding:5px 8px;font-size:12px;font-family:'Inter',sans-serif;color:#5A1515;outline:none;resize:none;min-height:30px;line-height:1.4}
-.msg-ta:focus{border-color:#D07070}
-.msg-ta::placeholder{color:#C09090;opacity:.6}
-.btn-rm-sm{border:1px solid #F0C0C0;background:none;border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:12px;color:#C08080;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:4px}
-.btn-rm-sm:hover{background:#FAEEEE;color:var(--red);border-color:var(--red)}
-.btn-add-msg{border:1px dashed #F0C0C0;background:none;border-radius:var(--radius-sm);padding:3px 8px;font-size:11px;font-family:'Inter',sans-serif;color:#A04040;cursor:pointer;transition:all .15s;margin-top:3px;width:100%}
-.btn-add-msg:hover{border-color:#D07070;background:rgba(192,57,43,.04)}
-
-/* solucao = verde suave */
-.sol-ta{background:#F5FAF7;border:1px solid var(--green-border);color:#1A4D32}
-.sol-ta:focus{border-color:#6DBD90}
-.sol-ta::placeholder{color:#5A9A72;opacity:.7}
-
-.btn-rm{border:1px solid var(--border2);background:none;border-radius:var(--radius-sm);width:26px;height:26px;cursor:pointer;font-size:13px;color:var(--text3);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:2px}
-.btn-rm:hover{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
-.btn-add{border:1px dashed var(--border2);background:none;border-radius:var(--radius-sm);padding:4px 10px;font-size:11px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:3px;width:100%;text-align:left}
-.btn-add:hover{border-color:var(--accent-mid);color:var(--accent)}
-
-/* PANELS */
+/* ===== FASES + GRID ===== */
 .panel{display:none}
 .panel.active{display:block}
+.fase-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dark);margin:26px 0 12px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.fase-label .fl-line{flex:1;height:1px;background:var(--border2)}
+.fase-label .fl-prog{font-weight:600;color:var(--text3);letter-spacing:0;text-transform:none;font-size:11.5px}
+.fase-label .fl-tog{color:var(--text3);transition:transform .15s;font-size:12px}
+.fase-label.collapsed .fl-tog{transform:rotate(-90deg)}
+.fase-label input{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-dark);border:1px dashed var(--border2);background:none;border-radius:6px;padding:3px 8px;outline:none;min-width:220px}
+.cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.cards-grid.collapsed{display:none}
+.btn-newcard{border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:16px;font-size:13px;color:var(--text3);cursor:pointer;transition:all .15s;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center}
+.btn-newcard:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-newfase{display:block;width:100%;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:14px;font-size:13px;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:26px}
+.btn-newfase:hover{border-color:var(--gold);color:var(--gold-dark)}
 
-/* EMPTY */
-.empty{text-align:center;padding:48px;color:var(--text3);font-size:14px;display:none}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;cursor:pointer;transition:all .15s;box-shadow:0 1px 3px rgba(42,37,33,.04);display:flex;flex-direction:column;gap:10px}
+.pcard:hover{border-color:var(--gold);box-shadow:0 6px 20px rgba(42,37,33,.08);transform:translateY(-1px)}
+.pcard.done{opacity:.62}
+.pcard-title{font-family:'Playfair Display',serif;font-size:16.5px;font-weight:600;line-height:1.3}
+.pcard-desc{font-size:12.5px;color:var(--text2);flex:1}
+.pcard-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:600;border-radius:99px;padding:2px 9px}
+.pcard-foot{display:flex;gap:7px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--border);padding-top:10px}
+.mini{font-size:11px;font-weight:600;border-radius:99px;padding:3px 10px}
+.mini.prob{background:var(--red-bg);color:var(--red)}
+.mini.msg{background:var(--gold-soft);color:var(--gold-dark)}
+.mini.sol{background:var(--green-bg);color:var(--green)}
+.mini.zero{background:var(--soft);color:var(--text3);font-weight:500}
+.mini.status{margin-left:auto;border:1px solid}
+.mini.st-todo{border-color:var(--red-border);background:var(--red-bg);color:var(--red)}
+.mini.st-doing{border-color:var(--amber-border);background:var(--amber-bg);color:var(--amber)}
+.mini.st-done{border-color:var(--green-border);background:var(--green-bg);color:var(--green)}
+.empty{text-align:center;padding:46px;color:var(--text3);font-size:13.5px;display:none}
 
-/* MSGS TIMELINE */
-.msgs-section{padding:10px 14px 14px 16px;background:#EFF5FD;border-top:1px solid var(--blue-border)}
-.msgs-section-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--blue);font-weight:600;margin-bottom:10px}
-.msgs-timeline{display:flex;flex-direction:column;gap:0}
-.msg-item{display:flex;gap:10px;position:relative}
-.msg-item:not(:last-child)::before{content:'';position:absolute;left:13px;top:28px;bottom:-4px;width:1px;background:#BFD9F0}
-.msg-circle{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:5px}
-.msg-bubble{background:#fff;border:1px solid var(--blue-border);border-radius:8px;padding:8px 10px;margin-bottom:8px;flex:1;min-width:0}
-.msg-bubble-head{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.msg-bubble-label{font-size:10px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:.04em;flex:1;border:none;background:transparent;font-family:'Inter',sans-serif;outline:none;cursor:text}
-.msg-bubble-label:focus{background:rgba(37,99,168,.06);border-radius:3px;padding:1px 3px}
-.msg-bubble-label::placeholder{color:#90B0D8;opacity:.7}
-.msg-bubble-ta{width:100%;border:none;background:transparent;font-size:12px;font-family:'Inter',sans-serif;color:var(--text);line-height:1.55;resize:none;outline:none;min-height:36px;padding:0;cursor:text}
-.msg-bubble-ta:focus{background:rgba(37,99,168,.04);border-radius:4px;padding:2px 4px;margin:-2px -4px;width:calc(100% + 8px)}
-.msg-bubble-ta::placeholder{color:#AAC4E0;opacity:.8}
-.msg-rm-btn{border:1px solid var(--blue-border);background:none;border-radius:4px;width:22px;height:22px;cursor:pointer;font-size:12px;color:#90B0D8;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
-.msg-rm-btn:hover{background:#FDF3F2;border-color:var(--red-border);color:var(--red)}
-.btn-add-msg{border:1px dashed var(--blue-border);background:none;border-radius:var(--radius-sm);padding:5px 10px;font-size:11px;font-family:'Inter',sans-serif;color:var(--blue);cursor:pointer;transition:all .15s;margin-top:4px;width:100%;text-align:left}
-.btn-add-msg:hover{background:rgba(37,99,168,.06)}
+/* ===== MODAL (card aberto) ===== */
+.overlay{position:fixed;inset:0;background:rgba(42,37,33,.38);display:none;align-items:flex-start;justify-content:center;padding:36px 14px;overflow-y:auto;z-index:100}
+.overlay.show{display:flex}
+.detail{background:var(--card);border-radius:26px;box-shadow:0 24px 70px rgba(42,37,33,.25);max-width:780px;width:100%;padding:32px 38px 38px;animation:pop .18s ease;margin-bottom:40px}
+@keyframes pop{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+.detail-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:20px}
+.detail-title-ta{font-family:'Playfair Display',serif;font-size:24px;font-weight:600;border:none;background:none;outline:none;width:100%;color:var(--ink);line-height:1.25;border-bottom:1px dashed transparent}
+.detail-title-ta:hover,.detail-title-ta:focus{border-bottom-color:var(--border2)}
+.detail-sub{font-size:12px;color:var(--text3);margin-top:5px}
+.hd-btn{width:34px;height:34px;border:none;background:none;color:var(--text3);font-size:17px;cursor:pointer;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.hd-btn:hover{background:var(--soft);color:var(--ink)}
+.hd-btn.del:hover{background:var(--red-bg);color:var(--red)}
 
-/* NEW CARD BTN */
-.btn-new-card{display:flex;align-items:center;gap:6px;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:8px 14px;font-size:12px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:8px;width:100%}
-.btn-new-card:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
+.pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.pill{display:inline-flex;align-items:center;gap:8px;border:none;font-size:13.5px;font-weight:600;padding:10px 18px;border-radius:12px;cursor:pointer;transition:all .15s;background:var(--soft);color:var(--text2)}
+.pill:hover{background:var(--soft2)}
+.pill.active{background:var(--gold);color:#fff;box-shadow:0 2px 8px rgba(176,141,79,.35)}
+.pill .n{font-size:11px;background:rgba(0,0,0,.10);border-radius:99px;padding:1px 7px}
+.pill.active .n{background:rgba(255,255,255,.25)}
+.tabview{display:none}
+.tabview.active{display:block}
+.flabel{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin:20px 0 8px}
+.tabview > .flabel:first-child{margin-top:0}
+.det-input{width:100%;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--soft);padding:11px 14px;font-size:13px;color:var(--text2);outline:none;line-height:1.55}
+.det-input:focus{border-color:var(--gold);background:var(--card)}
+input.det-input{background:var(--card)}
 
-/* NEW FASE BTN */
-.btn-new-fase{display:flex;align-items:center;gap:6px;border:1px dashed var(--border2);background:none;border-radius:var(--radius);padding:10px 16px;font-size:13px;font-family:'Inter',sans-serif;color:var(--text3);cursor:pointer;transition:all .15s;margin-top:4px;width:100%}
-.btn-new-fase:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-light)}
+/* problemas */
+.prob-card{border:1px solid var(--red-border);background:var(--red-bg);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
+.prob-card-head{display:flex;align-items:flex-start;gap:9px;padding:10px 12px;cursor:pointer}
+.prob-arrow{color:var(--red);font-size:11px;margin-top:5px;transition:transform .15s;flex-shrink:0;display:inline-block}
+.prob-arrow.open{transform:rotate(90deg)}
+.prob-title-ta{flex:1;border:none;background:none;outline:none;font-size:13px;color:#6E2424;font-weight:500;line-height:1.5}
+.prob-title-ta::placeholder{color:#C08080}
+.btn-rm{border:none;background:none;color:inherit;opacity:.45;cursor:pointer;font-size:15px;flex-shrink:0;padding:2px 4px}
+.btn-rm:hover{opacity:1}
+.prob-body{display:none;padding:2px 14px 13px 32px;border-top:1px dashed var(--red-border)}
+.prob-body.open{display:block}
+.sub-lbl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#A05050;margin:11px 0 5px}
+.sub-input{width:100%;border:1px solid var(--red-border);border-radius:7px;background:#fff;padding:7px 10px;font-size:12.5px;color:#6E2424;outline:none}
+.sub-input:focus{border-color:var(--red)}
+.sub-row{display:flex;gap:7px;align-items:flex-start;margin-bottom:6px}
+.sub-num{width:18px;height:18px;border-radius:50%;background:#fff;border:1px solid var(--red-border);color:var(--red);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:6px}
+.sub-ta{flex:1;border:1px solid var(--red-border);border-radius:7px;background:#fff;padding:7px 10px;font-size:12.5px;color:#6E2424;outline:none;line-height:1.5}
+.sub-ta:focus{border-color:var(--red)}
+.btn-add{border:1px dashed var(--border2);background:none;border-radius:var(--radius-sm);padding:9px 14px;font-size:12px;color:var(--text3);cursor:pointer;width:100%;text-align:left;transition:all .15s;margin-top:4px}
+.btn-add:hover{border-color:var(--gold);color:var(--gold-dark)}
+.btn-add.sm{padding:6px 11px;font-size:11.5px;margin-top:2px}
 
-/* DELETE CARD BTN */
-.btn-del-card{border:none;background:none;font-size:13px;color:var(--text3);cursor:pointer;padding:3px 6px;border-radius:4px;transition:all .15s;flex-shrink:0}
-.btn-del-card:hover{background:var(--red-bg);color:var(--red)}
-footer{text-align:center;padding:24px;font-size:11px;color:var(--text3);border-top:1px solid var(--border);margin-top:32px}
+/* mensagens */
+.wa-wrap{background:#EFEAE2;background-image:radial-gradient(rgba(180,160,130,.10) 1px, transparent 1px);background-size:14px 14px;border-radius:var(--radius);padding:16px;border:1px solid var(--border)}
+.msg-item{display:flex;gap:10px;margin-bottom:14px}
+.msg-item:last-child{margin-bottom:0}
+.msg-circle{width:24px;height:24px;border-radius:50%;background:var(--gold);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:4px}
+.bubble{background:#fff;border-radius:4px 12px 12px 12px;padding:9px 12px 11px;box-shadow:0 1px 1px rgba(0,0,0,.07);flex:1;max-width:560px}
+.bubble-head{display:flex;gap:8px;align-items:center;margin-bottom:5px}
+.bubble-label{flex:1;border:none;background:none;outline:none;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--gold-dark)}
+.bubble-label::placeholder{color:#C9B68F;font-weight:600}
+.bubble-ta{width:100%;border:none;background:none;outline:none;font-size:12.5px;line-height:1.55;color:#2F2A24}
+.bubble-ta::placeholder{color:#B5AC9C}
+.msg-hint{font-size:11.5px;color:var(--text3);margin-top:10px;font-style:italic}
 
-@media(max-width:640px){
-  header{padding:0 16px;flex-wrap:wrap}
-  main,.filters,.progress-bar-wrap{padding-left:16px;padding-right:16px}
-  .fase-body{grid-template-columns:1fr}
-  .header-right{display:none}
+/* soluções */
+.sol-row{display:flex;gap:8px;align-items:flex-start;margin-bottom:8px}
+.sol-ta{flex:1;border:1px solid var(--green-border);border-radius:var(--radius-sm);background:var(--green-bg);padding:10px 13px;font-size:13px;color:#1C4D33;outline:none;line-height:1.55}
+.sol-ta:focus{border-color:var(--green);background:#fff}
+.sol-ta::placeholder{color:#7FAE92}
+.sol-row .btn-rm{color:var(--green);margin-top:8px}
+.meta-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:12px;align-items:end;margin-top:6px}
+.status-sel{font-size:12.5px;font-weight:600;border-radius:99px;padding:8px 16px;border:1px solid;cursor:pointer;background:none;outline:none;-webkit-appearance:none;appearance:none}
+.status-sel.st-todo{color:var(--red);border-color:var(--red-border);background:var(--red-bg)}
+.status-sel.st-doing{color:var(--amber);border-color:var(--amber-border);background:var(--amber-bg)}
+.status-sel.st-done{color:var(--green);border-color:var(--green-border);background:var(--green-bg)}
+
+footer{text-align:center;padding:34px 0 0;font-size:11px;color:var(--text3)}
+
+@media(max-width:760px){
+  body{padding:16px 10px 60px}
+  .cards-grid{grid-template-columns:1fr}
+  .jtabs{margin-left:0;width:100%}
+  .jtab{flex:1}
+  .statline{margin-left:0;width:100%}
+  .detail{padding:22px 16px 26px;border-radius:20px}
+  .pills{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+  .pill{white-space:nowrap}
+  .meta-grid{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<header>
-  <div class="header-brand">
-    <div class="header-logo">W</div>
-    <div><div class="header-title">Welcome Weddings</div><div class="header-sub">Mapeamento de Jornadas</div></div>
-  </div>
-  <div class="header-tabs">
-    <button class="tab-btn active" onclick="switchTab('casal',this)">Jornada do Casal</button>
-    <button class="tab-btn" onclick="switchTab('convidado',this)">Jornada do Convidado</button>
-  </div>
-  <div class="header-right">
-    <div class="stat-group">
-      <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Etapas</div></div>
-      <div class="stat"><div class="stat-num" style="color:var(--orange)" id="stat-doing">0</div><div class="stat-label">Andamento</div></div>
-      <div class="stat"><div class="stat-num" style="color:var(--green)" id="stat-done">0</div><div class="stat-label">Resolvido</div></div>
+  <div class="topbar">
+    <div class="logo">W</div>
+    <div>
+      <div class="top-title">Welcome Weddings</div>
+      <div class="top-sub">Atendimento à Viagem · Mapeamento de Jornadas</div>
+    </div>
+    <div class="jtabs">
+      <button class="jtab" id="jtab-casal" onclick="switchTab('casal')">Jornada do Casal</button>
+      <button class="jtab active" id="jtab-convidado" onclick="switchTab('convidado')">Jornada do Convidado</button>
     </div>
   </div>
-</header>
 
-<div class="progress-bar-wrap">
-  <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill"></div></div>
-  <span class="progress-txt" id="prog-txt">0 de 0 etapas resolvidas · 0%</span>
+  <div class="subbar">
+    <button class="fbtn active" data-filter="all" onclick="filterCards('all',this)">Todas</button>
+    <button class="fbtn" data-filter="todo" onclick="filterCards('todo',this)">A resolver</button>
+    <button class="fbtn" data-filter="doing" onclick="filterCards('doing',this)">Em andamento</button>
+    <button class="fbtn" data-filter="done" onclick="filterCards('done',this)">Resolvido</button>
+    <div class="statline" id="statline"></div>
+  </div>
+
+  <div class="panel" id="panel-casal"></div>
+  <div class="panel active" id="panel-convidado"></div>
+  <div class="empty" id="empty-state">Nenhuma etapa encontrada com esse filtro.</div>
+
+  <footer>Welcome Weddings · Jornadas do Casal e do Convidado — Tudo salvo automaticamente neste navegador</footer>
 </div>
 
-<div class="filters">
-  <span class="filters-lbl">Filtrar</span>
-  <button class="fbtn active" onclick="filterCards('all',this)">Todas</button>
-  <button class="fbtn" onclick="filterCards('todo',this)">A resolver</button>
-  <button class="fbtn" onclick="filterCards('doing',this)">Em andamento</button>
-  <button class="fbtn" onclick="filterCards('done',this)">Resolvido</button>
+<div class="overlay" id="overlay">
+  <div class="detail" id="detail"></div>
 </div>
-
-<main>
-  <div id="panel-casal" class="panel active"></div>
-  <button class="btn-new-fase" id="new-fase-casal" onclick="addFase('casal')">+ Nova fase — Jornada do Casal</button>
-  <div id="panel-convidado" class="panel"></div>
-  <button class="btn-new-fase" id="new-fase-convidado" onclick="addFase('convidado')" style="display:none">+ Nova fase — Jornada do Convidado</button>
-  <div class="empty" id="empty-state">Nenhuma etapa encontrada.</div>
-</main>
-
-<footer>Welcome Weddings · Jornadas do Casal e do Convidado · Maio 2026 — Tudo salvo automaticamente</footer>
 
 <script>
-const SK = 'ww_jornadas_v1';
-let state = {};
-let currentTab = 'casal';
-let cardIdx = 0;
-const cardMeta = {}; // idx → {tab, faseId}
-
-// ─────────────────────────────────────────────
-// DATA
-// ─────────────────────────────────────────────
 const DATA = {
   casal: [
     {
@@ -568,461 +509,440 @@ const DATA = {
   ]
 };
 
+
 // ─────────────────────────────────────────────
-// STATE
+// STATE  (mesma chave e formato da versão anterior)
 // ─────────────────────────────────────────────
+const SK = 'ww_jornadas_v1';
+let state = {};
+let currentTab = 'convidado';
+let currentIdx = null;
+let cardIdx = 0;
+const cardMeta = {};   // idx → {tab, faseId}
+const cardSource = {}; // idx → DATA card original (tags) ou null
+
 function loadState(){ try{ const s=localStorage.getItem(SK); if(s) state=JSON.parse(s); }catch(e){ state={}; } }
 function saveState(){ try{ localStorage.setItem(SK,JSON.stringify(state)); }catch(e){} }
+
 function getCS(idx){
   if(!state[idx]) state[idx]={status:'todo',titulo:'',processo:'',responsavel:'',prazo:'',problemas:[],solucoes:[],acoes:[]};
   if(!state[idx].acoes) state[idx].acoes=[];
-  // migrate old string problemas to objects
   state[idx].problemas = (state[idx].problemas||[]).map(function(p){
     if(!p) return {texto:'',comoEnviado:'',oQueEnviado:['']};
     if(typeof p==='string') return {texto:p, comoEnviado:'', oQueEnviado:['']};
-    if(!p.oQueEnviado) p.oQueEnviado = [''];
-    if(!p.texto) p.texto = '';
-    if(!p.comoEnviado) p.comoEnviado = '';
+    if(!p.oQueEnviado) p.oQueEnviado=[''];
+    if(!p.texto) p.texto='';
+    if(!p.comoEnviado) p.comoEnviado='';
     return p;
   });
-  if(!state[idx].problemas.length) state[idx].problemas = [{texto:'',comoEnviado:'',oQueEnviado:['']}];
+  if(!state[idx].problemas.length) state[idx].problemas=[{texto:'',comoEnviado:'',oQueEnviado:['']}];
+  if(!state[idx].solucoes) state[idx].solucoes=[];
   return state[idx];
 }
 function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:['']}; }
-function autoResize(ta){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
-function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/["]/g,'&#34;'); }
+function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&#34;'); }
+function autoResize(ta){ if(!ta||ta.tagName!=='TEXTAREA') return; ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+
+// estruturas extras persistidas dentro do mesmo state
+function getCF(){ if(!state.__cf) state.__cf={casal:[],convidado:[]}; if(!state.__cf.casal) state.__cf.casal=[]; if(!state.__cf.convidado) state.__cf.convidado=[]; return state.__cf; }
+function getCC(){ if(!state.__cc) state.__cc=[]; return state.__cc; }
+function getDel(){ if(!state.__del) state.__del=[]; return state.__del; }
 
 // ─────────────────────────────────────────────
-// RENDER
+// CONTADORES
 // ─────────────────────────────────────────────
+function countProb(cs){ return cs.problemas.filter(p=>((p&&p.texto)||'').trim()).length; }
+function countMsg(cs){ return (cs.acoes||[]).filter(a=>(((a&&a.label)||'')+((a&&a.texto)||'')).trim()).length; }
+function countSol(cs){ return (cs.solucoes||[]).filter(s=>(s||'').trim()).length; }
+const STATUS_TXT={todo:'● A resolver',doing:'● Em andamento',done:'✓ Resolvido'};
+
+// ─────────────────────────────────────────────
+// RENDER GERAL
+// ─────────────────────────────────────────────
+function faseSectionHtml(fase, tab, custom){
+  const titleHtml = custom
+    ? '<input type="text" value="'+esc(fase.title)+'" placeholder="Nome da fase..." onclick="event.stopPropagation()" oninput="renameFase(\''+fase.id+'\',\''+tab+'\',this.value)">'
+    : '<span>'+esc(fase.title)+'</span>';
+  return '<div class="fase-label" id="flabel-'+fase.id+'" onclick="toggleFase(\''+fase.id+'\')">'
+    + titleHtml
+    + '<span class="fl-line"></span>'
+    + '<span class="fl-prog" id="fprog-'+fase.id+'"></span>'
+    + '<span class="fl-tog">▾</span>'
+    + '</div>'
+    + '<div class="cards-grid" id="fgrid-'+fase.id+'"></div>';
+}
+
+function pcardHtml(idx){
+  const cs=getCS(idx);
+  const src=cardSource[idx];
+  const np=countProb(cs), nm=countMsg(cs), ns=countSol(cs);
+  const desc=(cs.processo||'').trim();
+  const snippet=desc.length>130?desc.slice(0,130)+'…':desc;
+  const tagsHtml=(src&&src.tags?src.tags:[]).map(t=>'<span class="tag" style="background:'+t.s+';color:'+t.c+'">'+esc(t.t)+'</span>').join('');
+  return '<div class="pcard '+cs.status+'" data-idx="'+idx+'" data-status="'+cs.status+'" id="pcard-'+idx+'" onclick="openCard('+idx+')">'
+    + '<div class="pcard-title">'+(esc(cs.titulo)||'<span style="color:var(--text3)">Sem título</span>')+'</div>'
+    + (snippet?'<div class="pcard-desc">'+esc(snippet)+'</div>':'<div class="pcard-desc"></div>')
+    + (tagsHtml?'<div class="pcard-tags">'+tagsHtml+'</div>':'')
+    + '<div class="pcard-foot">'
+    + '<span class="mini '+(np?'prob':'zero')+'">'+np+' problema'+(np===1?'':'s')+'</span>'
+    + '<span class="mini '+(nm?'msg':'zero')+'">'+nm+' mensage'+(nm===1?'m':'ns')+'</span>'
+    + '<span class="mini '+(ns?'sol':'zero')+'">'+ns+' solu&ccedil;'+(ns===1?'&atilde;o':'&otilde;es')+'</span>'
+    + '<span class="mini status st-'+cs.status+'">'+STATUS_TXT[cs.status]+'</span>'
+    + '</div></div>';
+}
+
+function rebuildPcard(idx){
+  const el=document.getElementById('pcard-'+idx);
+  if(!el) return;
+  el.outerHTML=pcardHtml(idx);
+}
+
 function renderAll(){
   cardIdx=0;
+  const del=getDel();
   ['casal','convidado'].forEach(tab=>{
     const panel=document.getElementById('panel-'+tab);
     panel.innerHTML='';
     DATA[tab].forEach(fase=>{
-      const faseEl=document.createElement('div');
-      faseEl.className='fase'; faseEl.id='fase-'+fase.id;
-      faseEl.innerHTML=
-        '<div class="fase-hd" onclick="toggleFase(\'' + fase.id + '\')">'
-        + '<span class="fase-chip" style="background:' + fase.chipBg + ';color:' + fase.chipColor + '">' + fase.title + '</span>'
-        + '<div class="fase-line"></div>'
-        + '<span class="fase-prog" id="fprog-' + fase.id + '">0/' + fase.cards.length + '</span>'
-        + '<span class="fase-tog open" id="ftog-' + fase.id + '">&#9662;</span>'
-        + '</div>'
-        + '<div class="fase-body" id="fbody-' + fase.id + '"></div>'
-        + '<button class="btn-new-card" onclick="addCard(\'' + fase.id + '\',\'' + tab + '\')">+ Nova etapa</button>';
-      const body=faseEl.querySelector('.fase-body');
-      fase.cards.forEach((card)=>{
+      panel.insertAdjacentHTML('beforeend', faseSectionHtml(fase, tab, false));
+      const grid=document.getElementById('fgrid-'+fase.id);
+      fase.cards.forEach(card=>{
         const idx=cardIdx++;
         cardMeta[idx]={tab, faseId:fase.id};
+        cardSource[idx]=card;
+        const isNew=!state[idx];
         const cs=getCS(idx);
         if(!cs.titulo) cs.titulo=card.titulo;
         if(!cs.processo) cs.processo=card.processo;
         if(!cs.responsavel) cs.responsavel=card.responsavel;
         if(!cs.prazo) cs.prazo=card.prazo;
-        if(!cs.problemas||!cs.problemas.length){ cs.problemas=card.problemas.map(function(p){ return typeof p==='string'?mkProblema(p):(p||mkProblema('')); }); } if(!cs.problemas.length) cs.problemas=[mkProblema('')];
+        if(isNew && card.problemas.length) cs.problemas=card.problemas.map(p=>typeof p==='string'?mkProblema(p):(p||mkProblema('')));
+        if(!cs.problemas.length) cs.problemas=[mkProblema('')];
         if(!cs.solucoes||!cs.solucoes.length) cs.solucoes=card.solucoes.length?[...card.solucoes]:[''];
-        body.appendChild(buildCard(idx,card,cs));
+        if(del.indexOf(idx)===-1) grid.insertAdjacentHTML('beforeend', pcardHtml(idx));
       });
-      panel.appendChild(faseEl);
+      grid.insertAdjacentHTML('beforeend','<button class="btn-newcard" onclick="addCard(\''+fase.id+'\',\''+tab+'\')">+ Nova etapa</button>');
     });
   });
+  // fases personalizadas
+  const cf=getCF();
+  ['casal','convidado'].forEach(tab=>{
+    const panel=document.getElementById('panel-'+tab);
+    cf[tab].forEach(f=>{
+      panel.insertAdjacentHTML('beforeend', faseSectionHtml(f, tab, true));
+      const grid=document.getElementById('fgrid-'+f.id);
+      grid.insertAdjacentHTML('beforeend','<button class="btn-newcard" onclick="addCard(\''+f.id+'\',\''+tab+'\')">+ Nova etapa</button>');
+    });
+    panel.insertAdjacentHTML('beforeend','<button class="btn-newfase" onclick="addFase(\''+tab+'\')">+ Nova fase — '+(tab==='casal'?'Jornada do Casal':'Jornada do Convidado')+'</button>');
+  });
+  // cards personalizados (persistidos)
+  let maxIdx=cardIdx-1;
+  getCC().forEach(c=>{
+    cardMeta[c.idx]={tab:c.tab, faseId:c.faseId};
+    cardSource[c.idx]=null;
+    getCS(c.idx);
+    const grid=document.getElementById('fgrid-'+c.faseId);
+    if(grid && del.indexOf(c.idx)===-1){
+      const btn=grid.querySelector('.btn-newcard');
+      btn.insertAdjacentHTML('beforebegin', pcardHtml(c.idx));
+    }
+    if(c.idx>maxIdx) maxIdx=c.idx;
+  });
+  cardIdx=maxIdx+1;
   updateStats();
   updateAllFaseProgs();
-  setTimeout(()=>{ document.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },80);
-}
-
-function buildCard(idx,card,cs){
-  const wrap=document.createElement('div');
-  wrap.className='card '+cs.status;
-  wrap.dataset.status=cs.status;
-  wrap.dataset.idx=idx;
-  wrap.dataset.tab=cardMeta[idx].tab;
-  const tagsHtml=card.tags.map(function(t){ return '<span class="tag" style="background:'+t.s+';color:'+t.c+'">'+t.t+'</span>'; }).join('');
-  const probCount=cs.problemas.filter(p=>((typeof p==='object'?p.texto:p)||'').trim()).length;
-  const probBadge=probCount?'<span class="tag" style="background:#FDF3F2;color:#C0392B" data-prob="1">⚠ '+probCount+' problema'+(probCount>1?'s':'')+'</span>':'';
-  wrap.innerHTML='<div class="card-stripe"></div><div class="card-head"><div class="card-top"><textarea class="card-title-ta" rows="2" oninput="updateF('+idx+',\'titulo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.titulo)+'</textarea><button class="btn-del-card" onclick="deleteCard('+idx+')" title="Remover">&#10005;</button><div class="card-dot"></div></div><div class="card-foot"><div class="tags">'+tagsHtml+probBadge+'</div><select class="status-sel" onchange="changeStatus('+idx+',this.value)"><option value="todo"'+(cs.status==='todo'?' selected':'')+'>A resolver</option><option value="doing"'+(cs.status==='doing'?' selected':'')+'>Em andamento</option><option value="done"'+(cs.status==='done'?' selected':'')+'>Resolvido</option></select></div></div><button class="card-expbtn" id="expbtn-'+idx+'" onclick="toggleDet('+idx+')"><span class="arr">&#9662;</span> Processo &middot; Problemas &middot; Solu&ccedil;&otilde;es &middot; Respons&aacute;vel</button><div class="card-det" id="det-'+idx+'"><div class="det-sec"><div class="det-lbl">Como funciona hoje</div><textarea class="det-input" oninput="updateF('+idx+',\'processo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.processo)+'</textarea></div><div class="det-sec"><div class="det-lbl">Problemas identificados</div><div id="prob-'+idx+'">'+buildProblemasHtml(idx,cs.problemas)+'</div><button class="btn-add" onclick="addProblema('+idx+')">+ Adicionar problema</button></div><div class="det-sec"><div class="det-lbl">Poss&iacute;veis solu&ccedil;&otilde;es</div><div class="list-wrap" id="sol-'+idx+'">'+buildListHtml(idx,'solucoes',cs.solucoes,'sol-ta','&#128161; Descreva uma solução...')+'</div><button class="btn-add" onclick="addItem('+idx+',\'solucoes\')">+ Adicionar solução</button></div><div class="det-sec det-grid"><div><div class="det-lbl">Responsável</div><input class="det-input" type="text" value="'+esc(cs.responsavel)+'" oninput="updateF('+idx+',\'responsavel\',this.value)"></div><div><div class="det-lbl">Prazo</div><input class="det-input" type="date" value="'+esc(cs.prazo)+'" onchange="updateF('+idx+',\'prazo\',this.value)"></div></div></div><div class="msgs-section" id="msgs-section-'+idx+'"><div class="msgs-section-lbl">Mensagens / Ações disparadas</div><div class="msgs-timeline" id="msgs-tl-'+idx+'">'+buildAcoesHtml(idx,cs.acoes)+'</div><button class="btn-add-msg" onclick="addAcao('+idx+')">+ Adicionar mensagem ou ação</button></div>';
-  return wrap;
-}
-
-function buildListHtml(idx,field,items,cls,ph){
-  return items.map(function(s,i){
-    return '<div class="list-row" id="'+field+'-row-'+idx+'-'+i+'">'
-      +'<textarea class="list-ta '+cls+'" rows="1" placeholder="'+ph+'"'
-      +' oninput="updateItem('+idx+',\''+field+'\','+i+',this.value);autoResize(this)"'
-      +' onfocus="autoResize(this)">'+esc(s)+'</textarea>'
-      +'<button class="btn-rm" onclick="removeItem('+idx+',\''+field+'\','+i+')">&#215;</button>'
-      +'</div>';
-  }).join('');
-}
-
-function buildProblemasHtml(idx, problemas){
-  return problemas.map((p,pi)=>buildUmProblema(idx,pi,p)).join('');
-}
-
-function buildUmProblema(idx,pi,p){
-  var msgs = (p.oQueEnviado||['']);
-  var msgsHtml = msgs.map(function(m,mi){
-    return '<div class="msg-row" id="msg-'+idx+'-'+pi+'-'+mi+'">'
-      +'<span class="msg-num">'+(mi+1)+'</span>'
-      +'<textarea class="msg-ta" rows="1"'
-      +' oninput="updateMsgItem('+idx+','+pi+','+mi+',this.value);autoResize(this)"'
-      +' onfocus="autoResize(this)">'+esc(m)+'</textarea>'
-      +'<button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+mi+')">&#215;</button>'
-      +'</div>';
-  }).join('');
-  var comoVal = esc(p.comoEnviado||'');
-  var textoVal = esc(p.texto||'');
-  var q = "'";
-  return '<div class="prob-card" id="prob-card-'+idx+'-'+pi+'">'
-    +'<div class="prob-card-head" onclick="toggleProbCard('+q+idx+'-'+pi+q+')">'
-    +'<span class="prob-card-arrow" id="prob-arrow-'+idx+'-'+pi+'" style="display:inline-block;transform:rotate(90deg);transition:transform .15s">&#9654;</span>'
-    +'<textarea class="prob-card-title" rows="1"'
-    +' oninput="updateProblemaField('+idx+','+pi+','+q+'texto'+q+',this.value);autoResize(this)"'
-    +' onfocus="autoResize(this)"'
-    +' onclick="event.stopPropagation()">'+textoVal+'</textarea>'
-    +'<button class="btn-rm-sm" onclick="event.stopPropagation();removeProblema('+idx+','+pi+')">&#215;</button>'
-    +'</div>'
-    +'<div class="prob-card-body" id="prob-body-'+idx+'-'+pi+'">'
-    +'<div class="det-sec">'
-    +'<div class="prob-sub-lbl">Como &#233; feito</div>'
-    +'<input class="prob-sub-input" type="text"'
-    +' oninput="updateProblemaField('+idx+','+pi+','+q+'comoEnviado'+q+',this.value)"'
-    +' value="'+comoVal+'">'
-    +'</div>'
-    +'<div class="det-sec">'
-    +'<div class="prob-sub-lbl">O que &#233; feito/enviado &#8212; '+msgs.length+' ação(ões)</div>'
-    +'<div class="msgs-wrap" id="msgs-'+idx+'-'+pi+'">'+msgsHtml+'</div>'
-    +'<button class="btn-add-msg" onclick="addMsgItem('+idx+','+pi+')">+ Adicionar ação</button>'
-    +'</div>'
-    +'</div>'
-    +'</div>';
 }
 
 // ─────────────────────────────────────────────
-// ACOES (timeline messages)
+// TABS / FILTRO / STATS
 // ─────────────────────────────────────────────
-function buildAcoesHtml(idx, acoes){
-  if(!acoes || !acoes.length) return '';
-  return acoes.map(function(a,ai){ return buildUmaAcao(idx,ai,a); }).join('');
-}
-
-function buildUmaAcao(idx,ai,a){
-  var q = "'";
-  return '<div class="msg-item" id="acao-row-'+idx+'-'+ai+'">'
-    +'<div class="msg-circle">'+(ai+1)+'</div>'
-    +'<div class="msg-bubble">'
-    +'<div class="msg-bubble-head">'
-    +'<input class="msg-bubble-label" type="text" placeholder="Ex: Mensagem 1 · Boas-vindas..."'
-    +' value="'+esc(a.label||'')+'"'
-    +' oninput="updateAcaoField('+idx+','+ai+','+q+'label'+q+',this.value)">'
-    +'<button class="msg-rm-btn" onclick="removeAcao('+idx+','+ai+')" title="Remover">&#215;</button>'
-    +'</div>'
-    +'<textarea class="msg-bubble-ta" rows="2" placeholder="Cole o conteúdo ou descreva a ação..."'
-    +' oninput="updateAcaoField('+idx+','+ai+','+q+'texto'+q+',this.value);autoResize(this)"'
-    +' onfocus="autoResize(this)">'+esc(a.texto||'')+'</textarea>'
-    +'</div>'
-    +'</div>';
-}
-
-function addAcao(idx){
-  const cs = getCS(idx);
-  if(!cs.acoes) cs.acoes = [];
-  cs.acoes.push({label:'', texto:''});
-  saveState();
-  const ai = cs.acoes.length - 1;
-  const tl = document.getElementById('msgs-tl-'+idx);
-  tl.insertAdjacentHTML('beforeend', buildUmaAcao(idx, ai, cs.acoes[ai]));
-  const newRow = tl.lastElementChild;
-  newRow.querySelectorAll('textarea,input').forEach(function(el){ autoResize(el); });
-  newRow.querySelector('input').focus();
-}
-
-function updateAcaoField(idx, ai, field, value){
-  const cs = getCS(idx);
-  if(cs.acoes && cs.acoes[ai]) cs.acoes[ai][field] = value;
-  saveState();
-}
-
-function removeAcao(idx, ai){
-  const cs = getCS(idx);
-  if(!cs.acoes || !cs.acoes.length) return;
-  cs.acoes.splice(ai, 1);
-  saveState();
-  const tl = document.getElementById('msgs-tl-'+idx);
-  tl.innerHTML = buildAcoesHtml(idx, cs.acoes);
-  tl.querySelectorAll('textarea,input').forEach(function(el){ autoResize(el); });
-}
-
-function switchTab(tab, btn){
+function switchTab(tab){
   currentTab=tab;
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  document.getElementById('jtab-casal').classList.toggle('active',tab==='casal');
+  document.getElementById('jtab-convidado').classList.toggle('active',tab==='convidado');
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
-  // toggle new fase buttons
-  document.getElementById('new-fase-casal').style.display = tab==='casal'?'flex':'none';
-  document.getElementById('new-fase-convidado').style.display = tab==='convidado'?'flex':'none';
   updateStats();
-  updateAllFaseProgs();
-  const activeFilter = document.querySelector('.fbtn.active');
-  if(activeFilter) filterCards(activeFilter.dataset.filter||'all', activeFilter);
+  const f=document.querySelector('.fbtn.active');
+  filterCards(f?f.dataset.filter:'all', f||document.querySelector('.fbtn'));
 }
 
 function toggleFase(id){
-  const body=document.getElementById('fbody-'+id);
-  const tog=document.getElementById('ftog-'+id);
-  const col=body.classList.toggle('collapsed');
-  tog.classList.toggle('open',!col);
-}
-
-function toggleDet(idx){
-  const det=document.getElementById('det-'+idx);
-  const btn=document.getElementById('expbtn-'+idx);
-  const open=det.classList.toggle('open');
-  btn.classList.toggle('open',open);
-  if(open) setTimeout(()=>{ det.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
-}
-
-function changeStatus(idx,value){
-  const cs=getCS(idx);
-  cs.status=value;
-  saveState();
-  const card=document.querySelector('[data-idx="'+idx+'"');
-  card.className='card '+value;
-  card.dataset.status=value;
-  updateStats();
-  updateAllFaseProgs();
-}
-
-function updateF(idx,field,value){ const cs=getCS(idx); cs[field]=value; saveState(); }
-
-function updateItem(idx,field,i,value){
-  const cs=getCS(idx); cs[field][i]=value; saveState(); refreshProbBadge(idx);
-}
-
-function addItem(idx,field){
-  if(field==='problemas'){ addProblema(idx); return; }
-  const cs=getCS(idx); cs[field].push(''); saveState();
-  const i=cs[field].length-1;
-  const wrap=document.getElementById((field==='problemas'?'prob':'sol')+'-'+idx);
-  const cls=field==='problemas'?'prob-ta':'sol-ta';
-  const ph=field==='problemas'?'⚠ Descreva o problema...':'💡 Descreva uma solução...';
-  const div=document.createElement('div');
-  div.id=field+'-row-'+idx+'-'+i; div.className='list-row';
-  div.innerHTML='<textarea class="list-ta '+cls+'" rows="1" placeholder="'+ph+'"'
-    +' oninput="updateItem('+idx+',\''+field+'\','+i+',this.value);autoResize(this)"'
-    +' onfocus="autoResize(this)"></textarea>'
-    +'<button class="btn-rm" onclick="removeItem('+idx+',\''+field+'\','+i+')">&#215;</button>';
-  wrap.appendChild(div);
-  div.querySelector('textarea').focus();
-}
-
-function removeItem(idx,field,i){
-  const cs=getCS(idx);
-  if(cs[field].length<=1){ cs[field][0]=''; saveState(); const ta=document.querySelector('#'+field+'\-row\-'+idx+'\-'+i+'\-textarea'); if(ta) ta.value=''; return; }
-  cs[field].splice(i,1); saveState();
-  const wrap=document.getElementById((field==='problemas'?'prob':'sol')+'-'+idx);
-  const cls=field==='problemas'?'prob-ta':'sol-ta';
-  const ph=field==='problemas'?'⚠ Descreva o problema...':'💡 Descreva uma solução...';
-  wrap.innerHTML=buildListHtml(idx,field,cs[field],cls,ph);
-  wrap.querySelectorAll('textarea').forEach(ta=>autoResize(ta));
-  refreshProbBadge(idx);
-}
-
-// ── PROBLEMA FUNCS ──
-function toggleProbCard(key){
-  const body=document.getElementById('prob-body-'+key);
-  const arrow=document.getElementById('prob-arrow-'+key);
-  const collapsed=body.classList.toggle('collapsed');
-  arrow.style.transform = collapsed ? '' : 'rotate(90deg)';
-  if(!collapsed) setTimeout(()=>{ body.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
-}
-
-function updateProblemaField(idx,pi,field,value){
-  const cs=getCS(idx);
-  if(!cs.problemas[pi]) return;
-  cs.problemas[pi][field]=value;
-  saveState();
-  if(field==='texto') refreshProbBadge(idx);
-  // update count label
-  if(field==='oQueEnviado'){
-    const lbl=document.querySelector('#prob-body-'+(idx)+'-'+(pi)+' .prob-sub-lbl:last-of-type');
-    if(lbl) lbl.textContent='O que é feito/enviado — '+((cs.problemas[pi].oQueEnviado||[]).length)+' ação(ões)';
-  }
-}
-
-function addProblema(idx){
-  const cs=getCS(idx);
-  cs.problemas.push(mkProblema(''));
-  saveState();
-  const pi=cs.problemas.length-1;
-  const wrap=document.getElementById('prob-'+idx);
-  wrap.insertAdjacentHTML('beforeend', buildUmProblema(idx,pi,cs.problemas[pi]));
-  const newCard=wrap.lastElementChild;
-  newCard.querySelector('textarea').focus();
-  setTimeout(()=>{ newCard.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
-  refreshProbBadge(idx);
-}
-
-function removeProblema(idx,pi){
-  const cs=getCS(idx);
-  if(cs.problemas.length<=1){ cs.problemas[0]={texto:'',comoEnviado:'',oQueEnviado:['']}; saveState(); const wrap=document.getElementById('prob-'+idx); wrap.innerHTML=buildProblemasHtml(idx,cs.problemas); refreshProbBadge(idx); return; }
-  cs.problemas.splice(pi,1); saveState();
-  const wrap=document.getElementById('prob-'+idx);
-  wrap.innerHTML=buildProblemasHtml(idx,cs.problemas);
-  wrap.querySelectorAll('textarea').forEach(ta=>autoResize(ta));
-  refreshProbBadge(idx);
-}
-
-function addMsgItem(idx,pi){
-  const cs=getCS(idx);
-  if(!cs.problemas[pi].oQueEnviado) cs.problemas[pi].oQueEnviado=[''];
-  cs.problemas[pi].oQueEnviado.push('');
-  saveState();
-  const mi=cs.problemas[pi].oQueEnviado.length-1;
-  const wrap=document.getElementById('msgs-'+idx+'-'+pi);
-  const div=document.createElement('div');
-  div.id='msg-'+(idx)+'-'+(pi)+'-'+(mi); div.className='msg-row';
-  div.innerHTML='<span class="msg-num">'+(mi+1)+'</span><textarea class="msg-ta" rows="1" oninput="updateMsgItem('+idx+','+pi+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)"></textarea><button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+mi+')">&#215;</button>';
-  wrap.appendChild(div);
-  div.querySelector('textarea').focus();
-  updateMsgCountLabel(idx,pi);
-}
-
-function updateMsgItem(idx,pi,mi,value){
-  const cs=getCS(idx);
-  if(cs.problemas[pi] && cs.problemas[pi].oQueEnviado) cs.problemas[pi].oQueEnviado[mi]=value;
-  saveState();
-}
-
-function removeMsgItem(idx,pi,mi){
-  const cs=getCS(idx);
-  const msgs=cs.problemas[pi].oQueEnviado;
-  if(msgs.length<=1){ msgs[0]=''; saveState(); const ta=document.querySelector('#msg-'+(idx)+'-'+(pi)+'-'+(mi)+' textarea'); if(ta) ta.value=''; return; }
-  msgs.splice(mi,1); saveState();
-  const wrap=document.getElementById('msgs-'+idx+'-'+pi);
-  const msgsHtml=msgs.map(function(m,i){ return '<div class="msg-row" id="msg-'+idx+'-'+pi+'-'+i+'"><span class="msg-num">'+(i+1)+'</span><textarea class="msg-ta" rows="1" oninput="updateMsgItem('+idx+','+pi+','+i+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea><button class="btn-rm-sm" onclick="removeMsgItem('+idx+','+pi+','+i+')">&#215;</button></div>'; }).join('');
-  wrap.innerHTML=msgsHtml;
-  wrap.querySelectorAll('textarea').forEach(ta=>autoResize(ta));
-  updateMsgCountLabel(idx,pi);
-}
-
-function updateMsgCountLabel(idx,pi){
-  const cs=getCS(idx);
-  const count=(cs.problemas[pi]?.oQueEnviado||[]).length;
-  const lbls=document.querySelectorAll('#prob-body-'+(idx)+'-'+(pi)+' .prob-sub-lbl');
-  if(lbls[1]) lbls[1].textContent='O que é feito/enviado — '+(count)+' ação(ões)';
-}
-
-function refreshProbBadge(idx){
-  const cs=getCS(idx);
-  const card=document.querySelector('[data-idx="'+idx+'"');
-  if(!card) return;
-  const tagsWrap=card.querySelector('.tags');
-  const ex=tagsWrap.querySelector('[data-prob]'); if(ex) ex.remove();
-  const count=cs.problemas.filter(p=>((typeof p==='object'?p.texto:p)||'').trim()).length;
-  if(count>0){
-    const span=document.createElement('span');
-    span.className='tag'; span.dataset.prob='1';
-    span.style.background='#FDF3F2'; span.style.color='#C0392B';
-    span.textContent='⚠ '+(count)+' problema'+(count>1?'s':'');
-    tagsWrap.appendChild(span);
-  }
+  document.getElementById('flabel-'+id).classList.toggle('collapsed');
+  document.getElementById('fgrid-'+id).classList.toggle('collapsed');
 }
 
 function filterCards(status, btn){
   document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  btn.dataset.filter=status;
-  const cards=document.querySelectorAll('#panel-'+(currentTab)+' .card');
+  const cards=document.querySelectorAll('#panel-'+currentTab+' .pcard');
   let visible=0;
   cards.forEach(c=>{ const show=status==='all'||c.dataset.status===status; c.style.display=show?'':'none'; if(show) visible++; });
   document.getElementById('empty-state').style.display=visible===0?'block':'none';
 }
 
 function updateStats(){
-  const cards=document.querySelectorAll('#panel-'+(currentTab)+' .card');
-  let todo=0,doing=0,done=0;
-  cards.forEach(c=>{ if(c.dataset.status==='todo') todo++; else if(c.dataset.status==='doing') doing++; else if(c.dataset.status==='done') done++; });
-  const total=cards.length;
-  document.getElementById('stat-total').textContent=total;
-  document.getElementById('stat-doing').textContent=doing;
-  document.getElementById('stat-done').textContent=done;
-  const pct=total?Math.round((done/total)*100):0;
-  document.getElementById('prog-fill').style.width=pct+'%';
-  document.getElementById('prog-txt').textContent=(done)+' de '+(total)+' etapas resolvidas · '+(pct)+'%';
+  const cards=document.querySelectorAll('#panel-'+currentTab+' .pcard');
+  let doing=0,done=0;
+  cards.forEach(c=>{ if(c.dataset.status==='doing') doing++; else if(c.dataset.status==='done') done++; });
+  document.getElementById('statline').innerHTML='<b>'+cards.length+'</b> etapas · <b>'+doing+'</b> em andamento · <b>'+done+'</b> resolvidas';
 }
 
 function updateAllFaseProgs(){
-  Object.values(DATA).flat().forEach(fase=>{
-    const cards=document.querySelectorAll('#fbody-'+(fase.id)+' .card');
+  document.querySelectorAll('.cards-grid').forEach(grid=>{
+    const id=grid.id.replace('fgrid-','');
+    const cards=grid.querySelectorAll('.pcard');
     const done=[...cards].filter(c=>c.dataset.status==='done').length;
-    const el=document.getElementById('fprog-'+fase.id);
-    if(el) el.textContent=(done)+'/'+(cards.length);
+    const el=document.getElementById('fprog-'+id);
+    if(el) el.textContent=done+'/'+cards.length;
   });
 }
 
 // ─────────────────────────────────────────────
-// ADD / DELETE
+// MODAL — CARD ABERTO
+// ─────────────────────────────────────────────
+function faseTitleOf(idx){
+  const meta=cardMeta[idx];
+  const f=DATA[meta.tab].find(x=>x.id===meta.faseId);
+  if(f) return f.title;
+  const cf=getCF()[meta.tab].find(x=>x.id===meta.faseId);
+  return cf?cf.title:'';
+}
+
+function openCard(idx){
+  currentIdx=idx;
+  const cs=getCS(idx);
+  const meta=cardMeta[idx];
+  const np=countProb(cs), nm=countMsg(cs), ns=countSol(cs);
+  const jor=meta.tab==='casal'?'Jornada do Casal':'Jornada do Convidado';
+  const d=document.getElementById('detail');
+  d.innerHTML=
+    '<div class="detail-head"><div style="flex:1">'
+    + '<textarea class="detail-title-ta" rows="1" placeholder="Título da etapa..." oninput="updateF(\'titulo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.titulo)+'</textarea>'
+    + '<div class="detail-sub">'+jor+' · '+esc(faseTitleOf(idx))+'</div></div>'
+    + '<button class="hd-btn del" title="Remover etapa" onclick="deleteCard()">🗑</button>'
+    + '<button class="hd-btn" title="Fechar" onclick="closeCard()">✕</button></div>'
+    + '<div class="pills">'
+    + '<button class="pill active" id="pill-problema" onclick="modalTab(\'problema\')">⚠️ Problemas <span class="n" id="n-prob">'+np+'</span></button>'
+    + '<button class="pill" id="pill-mensagens" onclick="modalTab(\'mensagens\')">💬 Mensagens <span class="n" id="n-msg">'+nm+'</span></button>'
+    + '<button class="pill" id="pill-solucoes" onclick="modalTab(\'solucoes\')">✅ Soluções <span class="n" id="n-sol">'+ns+'</span></button>'
+    + '</div>'
+    + '<div class="tabview active" id="t-problema">'
+    + '<div class="flabel">Como funciona hoje</div>'
+    + '<textarea class="det-input" rows="2" placeholder="Descreva o processo atual..." oninput="updateF(\'processo\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(cs.processo)+'</textarea>'
+    + '<div class="flabel">Problemas</div>'
+    + '<div id="prob-list">'+cs.problemas.map((p,pi)=>probHtml(pi,p)).join('')+'</div>'
+    + '<button class="btn-add" onclick="addProblema()">+ Adicionar problema</button>'
+    + '</div>'
+    + '<div class="tabview" id="t-mensagens">'
+    + '<div class="flabel">Mensagens enviadas nesta etapa</div>'
+    + '<div class="wa-wrap"><div id="msg-list">'+(cs.acoes.length?cs.acoes.map((a,ai)=>msgHtml(ai,a)).join(''):'')+'</div>'
+    + (cs.acoes.length?'':'<div class="msg-hint" id="msg-empty">Nenhuma mensagem cadastrada nesta etapa ainda.</div>')
+    + '</div>'
+    + '<button class="btn-add" onclick="addAcao()">+ Adicionar mensagem</button>'
+    + '<div class="msg-hint">Dica: use variáveis como {primeiro_nome}, {casal} e {cidade} para os campos dinâmicos do Guest.</div>'
+    + '</div>'
+    + '<div class="tabview" id="t-solucoes">'
+    + '<div class="flabel">Possíveis soluções</div>'
+    + '<div id="sol-list">'+cs.solucoes.map((s,si)=>solHtml(si,s)).join('')+'</div>'
+    + '<button class="btn-add" onclick="addSol()">+ Adicionar solução</button>'
+    + '<div class="flabel" style="margin-top:24px">Acompanhamento</div>'
+    + '<div class="meta-grid">'
+    + '<div><div class="sub-lbl" style="color:var(--text3)">Status</div>'
+    + '<select class="status-sel st-'+cs.status+'" id="status-sel" onchange="changeStatus(this.value)">'
+    + '<option value="todo"'+(cs.status==='todo'?' selected':'')+'>● A resolver</option>'
+    + '<option value="doing"'+(cs.status==='doing'?' selected':'')+'>● Em andamento</option>'
+    + '<option value="done"'+(cs.status==='done'?' selected':'')+'>✓ Resolvido</option></select></div>'
+    + '<div><div class="sub-lbl" style="color:var(--text3)">Responsável</div>'
+    + '<input class="det-input" type="text" value="'+esc(cs.responsavel)+'" oninput="updateF(\'responsavel\',this.value)"></div>'
+    + '<div><div class="sub-lbl" style="color:var(--text3)">Prazo</div>'
+    + '<input class="det-input" type="date" value="'+esc(cs.prazo)+'" onchange="updateF(\'prazo\',this.value)"></div>'
+    + '</div></div>';
+  document.getElementById('overlay').classList.add('show');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>{ d.querySelectorAll('textarea').forEach(autoResize); },30);
+}
+
+function closeCard(){
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow='';
+  if(currentIdx!==null){ rebuildPcard(currentIdx); updateStats(); updateAllFaseProgs(); }
+  currentIdx=null;
+}
+
+function modalTab(id){
+  document.querySelectorAll('.tabview').forEach(v=>v.classList.remove('active'));
+  document.getElementById('t-'+id).classList.add('active');
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pill-'+id).classList.add('active');
+  setTimeout(()=>{ document.querySelectorAll('#t-'+id+' textarea').forEach(autoResize); },20);
+}
+
+function refreshCounts(){
+  const cs=getCS(currentIdx);
+  const np=document.getElementById('n-prob'), nm=document.getElementById('n-msg'), ns=document.getElementById('n-sol');
+  if(np) np.textContent=countProb(cs);
+  if(nm) nm.textContent=countMsg(cs);
+  if(ns) ns.textContent=countSol(cs);
+}
+
+function updateF(field,value){ const cs=getCS(currentIdx); cs[field]=value; saveState(); }
+
+function changeStatus(value){
+  const cs=getCS(currentIdx); cs.status=value; saveState();
+  const sel=document.getElementById('status-sel');
+  sel.className='status-sel st-'+value;
+}
+
+// ── PROBLEMAS ──
+function probHtml(pi,p){
+  const msgs=(p.oQueEnviado||['']);
+  const msgsHtml=msgs.map((m,mi)=>
+    '<div class="sub-row"><span class="sub-num">'+(mi+1)+'</span>'
+    + '<textarea class="sub-ta" rows="1" placeholder="Descreva a ação ou mensagem..." oninput="updSub('+pi+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea>'
+    + '<button class="btn-rm" style="color:var(--red)" onclick="rmSub('+pi+','+mi+')">×</button></div>'
+  ).join('');
+  return '<div class="prob-card" id="prob-'+pi+'">'
+    + '<div class="prob-card-head">'
+    + '<span class="prob-arrow" id="parr-'+pi+'" onclick="toggleProb('+pi+')">▶</span>'
+    + '<textarea class="prob-title-ta" rows="1" placeholder="⚠ Descreva o problema..." oninput="updProb('+pi+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(p.texto)+'</textarea>'
+    + '<button class="btn-rm" style="color:var(--red)" onclick="rmProb('+pi+')">×</button></div>'
+    + '<div class="prob-body" id="pbody-'+pi+'">'
+    + '<div class="sub-lbl">Como é feito</div>'
+    + '<input class="sub-input" type="text" placeholder="Ex: manualmente pela Juliana..." value="'+esc(p.comoEnviado)+'" oninput="updProb('+pi+',\'comoEnviado\',this.value)">'
+    + '<div class="sub-lbl">O que é feito / enviado</div>'
+    + '<div id="subs-'+pi+'">'+msgsHtml+'</div>'
+    + '<button class="btn-add sm" onclick="addSub('+pi+')">+ Adicionar ação</button>'
+    + '</div></div>';
+}
+function renderProbs(){
+  const cs=getCS(currentIdx);
+  document.getElementById('prob-list').innerHTML=cs.problemas.map((p,pi)=>probHtml(pi,p)).join('');
+  document.querySelectorAll('#prob-list textarea').forEach(autoResize);
+  refreshCounts();
+}
+function toggleProb(pi){
+  document.getElementById('pbody-'+pi).classList.toggle('open');
+  document.getElementById('parr-'+pi).classList.toggle('open');
+  setTimeout(()=>{ document.querySelectorAll('#pbody-'+pi+' textarea').forEach(autoResize); },20);
+}
+function updProb(pi,field,value){ const cs=getCS(currentIdx); if(cs.problemas[pi]){ cs.problemas[pi][field]=value; saveState(); if(field==='texto') refreshCounts(); } }
+function addProblema(){ const cs=getCS(currentIdx); cs.problemas.push(mkProblema('')); saveState(); renderProbs(); const list=document.getElementById('prob-list'); const ta=list.lastElementChild.querySelector('.prob-title-ta'); if(ta) ta.focus(); }
+function rmProb(pi){
+  const cs=getCS(currentIdx);
+  if(cs.problemas.length<=1){ cs.problemas[0]=mkProblema(''); }
+  else cs.problemas.splice(pi,1);
+  saveState(); renderProbs();
+}
+function addSub(pi){ const cs=getCS(currentIdx); cs.problemas[pi].oQueEnviado.push(''); saveState(); renderProbs(); document.getElementById('pbody-'+pi).classList.add('open'); document.getElementById('parr-'+pi).classList.add('open'); }
+function updSub(pi,mi,value){ const cs=getCS(currentIdx); if(cs.problemas[pi]&&cs.problemas[pi].oQueEnviado) cs.problemas[pi].oQueEnviado[mi]=value; saveState(); }
+function rmSub(pi,mi){
+  const cs=getCS(currentIdx); const arr=cs.problemas[pi].oQueEnviado;
+  if(arr.length<=1) arr[0]=''; else arr.splice(mi,1);
+  saveState(); renderProbs(); document.getElementById('pbody-'+pi).classList.add('open'); document.getElementById('parr-'+pi).classList.add('open');
+}
+
+// ── MENSAGENS ──
+function msgHtml(ai,a){
+  return '<div class="msg-item" id="msg-'+ai+'">'
+    + '<div class="msg-circle">'+(ai+1)+'</div>'
+    + '<div class="bubble"><div class="bubble-head">'
+    + '<input class="bubble-label" type="text" placeholder="Ex: Perfil 1 · Só hospedagem" value="'+esc(a.label)+'" oninput="updAcao('+ai+',\'label\',this.value)">'
+    + '<button class="btn-rm" onclick="rmAcao('+ai+')">×</button></div>'
+    + '<textarea class="bubble-ta" rows="2" placeholder="Cole aqui o texto da mensagem..." oninput="updAcao('+ai+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(a.texto)+'</textarea>'
+    + '</div></div>';
+}
+function renderMsgs(){
+  const cs=getCS(currentIdx);
+  document.getElementById('msg-list').innerHTML=cs.acoes.map((a,ai)=>msgHtml(ai,a)).join('');
+  const empty=document.getElementById('msg-empty'); if(empty) empty.style.display=cs.acoes.length?'none':'';
+  document.querySelectorAll('#msg-list textarea').forEach(autoResize);
+  refreshCounts();
+}
+function addAcao(){ const cs=getCS(currentIdx); cs.acoes.push({label:'',texto:''}); saveState(); renderMsgs(); const list=document.getElementById('msg-list'); const inp=list.lastElementChild.querySelector('input'); if(inp) inp.focus(); }
+function updAcao(ai,field,value){ const cs=getCS(currentIdx); if(cs.acoes[ai]){ cs.acoes[ai][field]=value; saveState(); refreshCounts(); } }
+function rmAcao(ai){ const cs=getCS(currentIdx); cs.acoes.splice(ai,1); saveState(); renderMsgs(); }
+
+// ── SOLUÇÕES ──
+function solHtml(si,s){
+  return '<div class="sol-row" id="sol-'+si+'">'
+    + '<textarea class="sol-ta" rows="1" placeholder="💡 Descreva uma solução..." oninput="updSol('+si+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s)+'</textarea>'
+    + '<button class="btn-rm" onclick="rmSol('+si+')">×</button></div>';
+}
+function renderSols(){
+  const cs=getCS(currentIdx);
+  document.getElementById('sol-list').innerHTML=cs.solucoes.map((s,si)=>solHtml(si,s)).join('');
+  document.querySelectorAll('#sol-list textarea').forEach(autoResize);
+  refreshCounts();
+}
+function addSol(){ const cs=getCS(currentIdx); cs.solucoes.push(''); saveState(); renderSols(); const list=document.getElementById('sol-list'); const ta=list.lastElementChild.querySelector('textarea'); if(ta) ta.focus(); }
+function updSol(si,value){ const cs=getCS(currentIdx); cs.solucoes[si]=value; saveState(); refreshCounts(); }
+function rmSol(si){
+  const cs=getCS(currentIdx);
+  if(cs.solucoes.length<=1) cs.solucoes[0]=''; else cs.solucoes.splice(si,1);
+  saveState(); renderSols();
+}
+
+// ─────────────────────────────────────────────
+// ADD / DELETE / FASES
 // ─────────────────────────────────────────────
 function addCard(faseId, tab){
-  const idx = cardIdx++;
-  cardMeta[idx] = {tab, faseId};
-  const cs = getCS(idx);
+  const idx=cardIdx++;
+  cardMeta[idx]={tab, faseId};
+  cardSource[idx]=null;
+  const cs=getCS(idx);
   cs.titulo=''; cs.processo=''; cs.responsavel=''; cs.prazo='';
-  cs.problemas=['']; cs.solucoes=[''];
+  cs.problemas=[mkProblema('')]; cs.solucoes=[''];
+  getCC().push({idx, tab, faseId});
   saveState();
-  const emptyCard = {titulo:'', tags:[], processo:'', problemas:[''], responsavel:'', prazo:'', solucoes:['']};
-  const cardEl = buildCard(idx, emptyCard, cs);
-  const body = document.getElementById('fbody-'+faseId);
-  body.appendChild(cardEl);
-  cardEl.querySelector('textarea').focus();
-  setTimeout(()=>{ cardEl.querySelectorAll('textarea').forEach(ta=>autoResize(ta)); },20);
-  updateStats();
-  updateAllFaseProgs();
+  const grid=document.getElementById('fgrid-'+faseId);
+  const btn=grid.querySelector('.btn-newcard');
+  btn.insertAdjacentHTML('beforebegin', pcardHtml(idx));
+  updateStats(); updateAllFaseProgs();
+  openCard(idx);
+}
+
+function deleteCard(){
+  if(currentIdx===null) return;
+  if(!confirm('Remover esta etapa?')) return;
+  const idx=currentIdx;
+  const cc=getCC();
+  const i=cc.findIndex(c=>c.idx===idx);
+  if(i>=0) cc.splice(i,1);
+  else { const del=getDel(); if(del.indexOf(idx)===-1) del.push(idx); }
+  delete state[idx];
+  saveState();
+  const el=document.getElementById('pcard-'+idx);
+  if(el) el.remove();
+  currentIdx=null;
+  document.getElementById('overlay').classList.remove('show');
+  document.body.style.overflow='';
+  updateStats(); updateAllFaseProgs();
 }
 
 function addFase(tab){
-  const faseId = tab[0]+Date.now();
-  const newFase = {
-    id: faseId,
-    color:'#5C5A55', chipBg:'#F4F3F0', chipColor:'#2C2B28',
-    title:'Nova fase',
-    cards:[]
-  };
-  DATA[tab].push(newFase);
-  const panel = document.getElementById('panel-'+tab);
-  const btnFase = document.getElementById('new-fase-'+tab);
-  const faseEl = document.createElement('div');
-  faseEl.className='fase'; faseEl.id='fase-'+faseId;
-  faseEl.innerHTML=+'    <div class="fase-hd" onclick="toggleFase(\\\'\'+(faseId)+\'\\\')">'+'      <input type="text" value="Nova fase" placeholder="Nome da fase..."'+'        onclick="event.stopPropagation()"'+'        oninput="renameFase(\\\'\'+(faseId)+\'\\\',this.value)"'+'        style="font-size:12px;font-weight:600;border:1px solid var(--border2);border-radius:6px;padding:3px 8px;font-family:\\\'Inter\\\',sans-serif;color:var(--text2);background:var(--surface);outline:none;width:180px">'+'      <div class="fase-line"></div>'+'      <span class="fase-prog" id="fprog-\'+(faseId)+\'">0/0</span>'+'      <span class="fase-tog open" id="ftog-\'+(faseId)+\'">▾</span>'+'    </div>'+'    <div class="fase-body" id="fbody-\'+(faseId)+\'"></div>'+'    <button class="btn-new-card" onclick="addCard(\\\'\'+(faseId)+\'\\\',\\\'\'+(tab)+\'\\\')">+ Nova etapa</button>'+'  ';
-  panel.insertBefore(faseEl, null);
-  panel.appendChild(faseEl);
-  // put new fase button after
-  document.getElementById('new-fase-'+tab).after(faseEl);
-  faseEl.querySelector('input').focus();
-}
-
-function renameFase(faseId, value){
-  const chip = document.querySelector('#fase-'+(faseId)+' .fase-chip');
-  if(chip) chip.textContent = value;
-}
-
-function deleteCard(idx){
-  if(!confirm('Remover esta etapa?')) return;
-  const card = document.querySelector('[data-idx="'+idx+'"');
-  if(card) card.remove();
-  delete state[idx];
+  const id=tab[0]+Date.now();
+  getCF()[tab].push({id, title:''});
   saveState();
-  updateStats();
-  updateAllFaseProgs();
+  renderAll();
+  switchTab(tab);
+  const inp=document.querySelector('#flabel-'+id+' input');
+  if(inp) inp.focus();
 }
 
+function renameFase(id, tab, value){
+  const f=getCF()[tab].find(x=>x.id===id);
+  if(f){ f.title=value; saveState(); }
+}
+
+// ─────────────────────────────────────────────
 // INIT
+// ─────────────────────────────────────────────
+document.getElementById('overlay').addEventListener('click',function(e){ if(e.target.id==='overlay') closeCard(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&document.getElementById('overlay').classList.contains('show')) closeCard(); });
 loadState();
 renderAll();
+
 </script>
 </body>
 </html>
