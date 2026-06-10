@@ -119,7 +119,13 @@ input.det-input{background:var(--card)}
 .lvl-sel.lv-baixo,.lvl-sel.pr-baixa{color:var(--green);background:var(--green-bg);border-color:var(--green-border)}
 .lvl-sel.lv-medio,.lvl-sel.pr-media{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border)}
 .lvl-sel.lv-alto,.lvl-sel.pr-alta{color:var(--red);background:var(--red-bg);border-color:var(--red-border)}
-.prob-prio{padding:0 12px 10px 32px}
+.st-sel{font-size:10.5px;font-weight:700;letter-spacing:.04em;border-radius:99px;padding:3px 10px;border:1px solid var(--border2);cursor:pointer;background:#fff;color:var(--text3);outline:none;-webkit-appearance:none;appearance:none;margin-left:6px}
+.st-sel.sx-nao{color:var(--text3);background:#fff;border-color:var(--border2)}
+.st-sel.sx-andamento{color:var(--amber);background:var(--amber-bg);border-color:var(--amber-border)}
+.st-sel.sx-resolvido{color:var(--green);background:var(--green-bg);border-color:var(--green-border)}
+.prob-card.resolved{opacity:.62}
+.prob-card.resolved .prob-title-ta{text-decoration:line-through}
+.prob-prio{padding:0 12px 10px 32px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
 /* problemas */
 .prob-card{border:1px solid var(--red-border);background:var(--red-bg);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
@@ -584,7 +590,7 @@ function getCS(idx){
     return p;
   });
   if(!state[idx].problemas.length) state[idx].problemas=[{texto:'',comoEnviado:'',oQueEnviado:['']}];
-  state[idx].problemas.forEach(p=>{ if(p.prioridade===undefined) p.prioridade=''; });
+  state[idx].problemas.forEach(p=>{ if(p.prioridade===undefined) p.prioridade=''; if(p.st===undefined) p.st='nao'; });
   if(!state[idx].solucoes) state[idx].solucoes=[];
   if(!state[idx].solucoesLongo) state[idx].solucoesLongo=[];
   state[idx].solucoes = state[idx].solucoes.map(normSol);
@@ -597,9 +603,10 @@ function normSol(s){
   if(!s.nivel) s.nivel='';
   if(!s.comoSera) s.comoSera='';
   if(!s.oQueSera||!s.oQueSera.length) s.oQueSera=[''];
+  if(s.st===undefined) s.st='nao';
   return s;
 }
-function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:['']}; }
+function mkProblema(t){ return {texto:t||'', comoEnviado:'', oQueEnviado:[''], prioridade:'', st:'nao'}; }
 function esc(s){ if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&#34;'); }
 function autoResize(ta){ if(!ta||ta.tagName!=='TEXTAREA') return; ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
 
@@ -857,6 +864,16 @@ function changeStatus(value){
   sel.className='status-sel st-'+value;
 }
 
+
+// status por item (não iniciado / em andamento / resolvido)
+function stSelHtml(onchangeJs, st){
+  st = st||'nao';
+  return '<select class="st-sel sx-'+st+'" onchange="'+onchangeJs+'">'
+    + '<option value="nao"'+(st==='nao'?' selected':'')+'>○ Não iniciado</option>'
+    + '<option value="andamento"'+(st==='andamento'?' selected':'')+'>● Em andamento</option>'
+    + '<option value="resolvido"'+(st==='resolvido'?' selected':'')+'>✓ Resolvido</option></select>';
+}
+
 // ── PROBLEMAS ──
 function probHtml(pi,p){
   const msgs=(p.oQueEnviado||['']);
@@ -866,7 +883,8 @@ function probHtml(pi,p){
     + '<textarea class="sub-ta" rows="1" placeholder="Descreva a ação ou mensagem..." oninput="updSub('+pi+','+mi+',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(m)+'</textarea>'
     + '<button class="btn-rm" style="color:var(--red)" onclick="rmSub('+pi+','+mi+')">×</button></div>'
   ).join('');
-  return '<div class="prob-card" id="prob-'+pi+'">'
+  const resolved=p.st==='resolvido'?' resolved':'';
+  return '<div class="prob-card'+resolved+'" id="prob-'+pi+'">'
     + '<div class="prob-card-head">'
     + '<span class="prob-arrow" id="parr-'+pi+'" onclick="toggleProb('+pi+')">▶</span>'
     + '<textarea class="prob-title-ta" rows="1" placeholder="⚠ Descreva o problema..." oninput="updProb('+pi+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(p.texto)+'</textarea>'
@@ -876,7 +894,8 @@ function probHtml(pi,p){
     + '<option value=""'+(pr===''?' selected':'')+'>Prioridade...</option>'
     + '<option value="baixa"'+(pr==='baixa'?' selected':'')+'>Baixa</option>'
     + '<option value="media"'+(pr==='media'?' selected':'')+'>Média</option>'
-    + '<option value="alta"'+(pr==='alta'?' selected':'')+'>Alta</option></select></div>'
+    + '<option value="alta"'+(pr==='alta'?' selected':'')+'>Alta</option></select>'
+    + stSelHtml('updProbSt('+pi+',this.value)', p.st) + '</div>'
     + '<div class="prob-body" id="pbody-'+pi+'">'
     + '<div class="sub-lbl">Como é feito</div>'
     + '<input class="sub-input" type="text" placeholder="Ex: manualmente pela Juliana..." value="'+esc(p.comoEnviado)+'" oninput="updProb('+pi+',\'comoEnviado\',this.value)">'
@@ -896,6 +915,7 @@ function toggleProb(pi){
   document.getElementById('parr-'+pi).classList.toggle('open');
   setTimeout(()=>{ document.querySelectorAll('#pbody-'+pi+' textarea').forEach(autoResize); },20);
 }
+function updProbSt(pi,value){ const cs=getCS(currentIdx); if(cs.problemas[pi]){ cs.problemas[pi].st=value; saveState(); renderProbs(); } }
 function updProb(pi,field,value){ const cs=getCS(currentIdx); if(cs.problemas[pi]){ cs.problemas[pi][field]=value; saveState(); if(field==='texto') refreshCounts(); } }
 function addProblema(){ const cs=getCS(currentIdx); cs.problemas.push(mkProblema('')); saveState(); renderProbs(); const list=document.getElementById('prob-list'); const ta=list.lastElementChild.querySelector('.prob-title-ta'); if(ta) ta.focus(); }
 function rmProb(pi){
@@ -939,7 +959,7 @@ function updAcao(ai,field,value){ const cs=getCS(currentIdx); if(cs.acoes[ai]){ 
 function rmAcao(ai){ const cs=getCS(currentIdx); cs.acoes.splice(ai,1); saveState(); renderMsgs(); }
 
 // ── SOLUÇÕES (01 e 02) — mesmo formato dos problemas ──
-function mkSol(t){ return {texto:t||'', nivel:'', comoSera:'', oQueSera:['']}; }
+function mkSol(t){ return {texto:t||'', nivel:'', comoSera:'', oQueSera:[''], st:'nao'}; }
 function fkey(field){ return field==='solucoes'?'s1':'s2'; }
 function solHtml(field,si,s){
   const fk=fkey(field), variant=field==='solucoes'?'curto':'longo';
@@ -951,7 +971,8 @@ function solHtml(field,si,s){
     + '<button class="btn-rm" onclick="rmSolSub(\''+field+'\','+si+','+mi+')">×</button></div>'
   ).join('');
   const ph=field==='solucoes'?'💡 Descreva a solução 01...':'🎯 Descreva a solução 02...';
-  return '<div class="prob-card '+variant+'" id="solcard-'+fk+'-'+si+'">'
+  const resolved=s.st==='resolvido'?' resolved':'';
+  return '<div class="prob-card '+variant+resolved+'" id="solcard-'+fk+'-'+si+'">'
     + '<div class="prob-card-head">'
     + '<span class="prob-arrow '+variant+'" id="sarr-'+fk+'-'+si+'" onclick="toggleSol(\''+field+'\','+si+')">▶</span>'
     + '<textarea class="prob-title-ta '+variant+'" rows="1" placeholder="'+ph+'" oninput="updSolGen(\''+field+'\','+si+',\'texto\',this.value);autoResize(this)" onfocus="autoResize(this)">'+esc(s.texto)+'</textarea>'
@@ -961,7 +982,8 @@ function solHtml(field,si,s){
     + '<option value=""'+(nv===''?' selected':'')+'>Nível...</option>'
     + '<option value="baixo"'+(nv==='baixo'?' selected':'')+'>Baixo</option>'
     + '<option value="medio"'+(nv==='medio'?' selected':'')+'>Médio</option>'
-    + '<option value="alto"'+(nv==='alto'?' selected':'')+'>Alto</option></select></div>'
+    + '<option value="alto"'+(nv==='alto'?' selected':'')+'>Alto</option></select>'
+    + stSelHtml('updSolSt(&quot;'+field+'&quot;,'+si+',this.value)', s.st) + '</div>'
     + '<div class="prob-body '+variant+'" id="sbody-'+fk+'-'+si+'">'
     + '<div class="sub-lbl '+variant+'">Como será feito</div>'
     + '<input class="sub-input '+variant+'" type="text" placeholder="Ex: exportação automática no WelcomeCRM..." value="'+esc(s.comoSera||'')+'" oninput="updSolGen(\''+field+'\','+si+',\'comoSera\',this.value)">'
@@ -984,6 +1006,7 @@ function toggleSol(field,si){
   setTimeout(()=>{ document.querySelectorAll('#sbody-'+fk+'-'+si+' textarea').forEach(autoResize); },20);
 }
 function addSolGen(field){ const cs=getCS(currentIdx); cs[field].push(mkSol('')); saveState(); renderSols(field); const list=document.getElementById(listIdOf(field)); const ta=list.lastElementChild.querySelector('textarea'); if(ta) ta.focus(); }
+function updSolSt(field,si,value){ const cs=getCS(currentIdx); if(cs[field][si]){ cs[field][si].st=value; saveState(); renderSols(field); } }
 function updSolGen(field,si,prop,value){ const cs=getCS(currentIdx); if(cs[field][si]){ cs[field][si][prop]=value; saveState(); } }
 function rmSolGen(field,si){
   const cs=getCS(currentIdx);
